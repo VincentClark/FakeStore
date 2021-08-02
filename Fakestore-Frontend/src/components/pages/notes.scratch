@@ -1,0 +1,28 @@
+    <div className="grid-child red" >
+        <h3>Server</h3>
+            <ul><li>Error Handling</li></ul>
+        <h3>Registration</h3>     
+                <ul>
+                    <li>Registration - not started</li>
+                    <li>Synch to database - not started</li>
+                </ul>
+            
+        <h3>Services</h3>
+        <ul>
+            <li>Video Streaming - implemented</li>
+                <ul>
+                    <li>Video Playlist - started</li>
+                    <li>Video Upload function - not started</li>
+                    <li>Video Transcoding</li>
+                </ul>
+            <li>Pain Tracking / Tracking Serivce - discovery</li>
+            <li>Data Service - discovery</li>
+            <li>Image Library - discovery</li>
+        </ul>
+        <h3>CSS</h3>
+        <ul>
+            <li>Video Shorts</li>
+            <li>decorate</li>
+            <li>Consistant look</li>
+        </ul>
+    </div>

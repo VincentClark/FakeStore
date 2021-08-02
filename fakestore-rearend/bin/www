@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+/**
+ * Module dependicies
+ */
+const http = require('http');
+const config = require('../server/config')[process.env.NODE_ENV || 'development'];
+const cors = require('cors');
+const app = require('../server/app')(config);
+
+//console.log(`This is ENV: ${config}`)
+// Helper functions
+/*
+* Normaize Port into a number, string, or false
+*/
+
+function normalizePort(val) {
+    const port = parseInt(val, 10);
+  
+    if (Number.isNaN(port)) {
+      // named pipe
+      return val;
+    }
+    if (port >= 0) {
+      // port number
+      return port;
+    }
+    return false;
+  }
+
+/**
+ * Get port from enviornment and store in Express.
+ */
+const port = normalizePort(process.env.PORT || '8080');
+
+app.set('port', port);
+/**
+ * Create HTTP server and listen on the provied port
+ */
+const server = http.createServer(app);
+
+server.listen(port);
+
+server.on('listening', () => {
+  const addr = server.address();
+  const bind = typeof addr === 'string'
+    ? `pipe ${addr}`
+    : `port ${addr.port}`;
+  console.log(`Listening on ${bind}`);
+});
+
+// Test Routes
+app.options('*', cors()) // include before other routes
+app.get('/', (req, res) => {
+    res.send('<h1>Hello World</h1>')
+})
+// // End Test Routes
+
+// Dev Code for creating server
