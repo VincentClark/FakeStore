@@ -1,7 +1,7 @@
 FROM node:10.19.0
 
 # Create app directory
-WORKDIR /home/vincentclark/FakeStore/fakestore-rearend
+WORKDIR /home/vincentclark/FakeStore/fakestore-rear-end
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "New backend for fakestore. ",
   "main": "bin/www",
-  "homepage":"/videoplayer",
+  "homepage": "/videoplayer",
   "scripts": {
     "start": "node bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"

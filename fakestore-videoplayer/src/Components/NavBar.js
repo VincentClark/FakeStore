@@ -13,7 +13,7 @@ const NavBar = ({
       <div className="menu" style={{ backgroundColor: bgColor }}>
         <ul>
           {navConfig.map((ELEMENT) => (
-            <li key={ELEMENT.id.toString() + "li"} id={ELEMENT.id.toString()+"lid"}>
+            <li key={ELEMENT.id.toString() + "li"} id={ELEMENT.id.toString() + "lid"}>
               <NavButton
                 key={ELEMENT.id.toString()}
                 id={ELEMENT.key}
@@ -39,25 +39,7 @@ NavBar.defaultProps = {
       title: "Home",
       ref: "/",
       component: "HompePage",
-    },
-    {
-      id: 2,
-      title: "Registration",
-      ref: "/register",
-      component: "Registration",
-    },
-    {
-      id: 3,
-      title: "Garden Tracker",
-      ref: "/gardentracker",
-      component: "Garden Tracker",
-    },
-    {
-      id: 4,
-      title: "Video Shorts",
-      ref: "/videoShorts",
-      component: "/Video Shorts",
-    },
+    }
   ],
   color: "white",
   hoverColor: "rgb(240, 240, 240)",

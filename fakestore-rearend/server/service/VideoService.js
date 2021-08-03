@@ -39,21 +39,7 @@ class VideoService {
         const currentDirectory = await this.readdir(__dirname)
         return (currentDirectory);
     }
-    // async simpleStream(req,res) {
 
-    //     const { size } = await this.fileInfo(this.file);
-    //     //will rewrite when getting data from query pramaater
-    //     fs.readFile(this.file, (error, data) => {
-    //         if (error) {
-    //             console.log('hmmmm: ', error);
-    //         }
-    //         res.writeHeader(200, { 'Content-Type': 'video/mp4' });
-    //         console.log(data)
-    //         res.end(data);
-    //     })
-    //     return "success"
-
-    // }
     async respondWithVideo(req, res) {
         //need to update
         //fileName = this.file;
@@ -61,7 +47,7 @@ class VideoService {
         const videoId = querystring.parse(url.URL);
         // const pathP = new url.URLSearchParams("videosrc")
         const pathP = req.query.videosrc;
-        const fileName = this.filepath+"/"+pathP+".mp4"
+        const fileName = this.filepath + "/" + pathP + ".mp4"
 
 
         console.log("videoID", fileName);
@@ -87,10 +73,10 @@ class VideoService {
             createReadStream(fileName).pipe(res);
         }
     }
-    async contentList(){
+    async contentList() {
         return {
-            "video1":"ScrubJay_20210511",
-            "video2":"testvideo1",
+            "video1": "ScrubJay_20210511",
+            "video2": "testvideo1",
         }
     }
     async returnWithVideo(qs) {
@@ -98,12 +84,12 @@ class VideoService {
         const videoId = qs
         console.log(videoId)
         // const pathP = new url.URLSearchParams("videosrc")
-       // const pathP = req.query.videosrc;
-        const fileName = this.filepath+"/"+videoId+".mp4"
+        // const pathP = req.query.videosrc;
+        const fileName = this.filepath + "/" + videoId + ".mp4"
         const { size } = await this.fileInfo(fileName);
         console.log("SERVICE SIZE", size);
         //const range = req.headers.range;
-        let videoObject = {"size":size,"fileName":fileName }
+        let videoObject = { "size": size, "fileName": fileName }
         return (videoObject)
     }
 
