@@ -13,7 +13,8 @@ const FS5VideoPlayer = () => {
 
 
   // Needs to work on variable declaration and not hardcoded
-  const url = 'http://localhost:8080/videos/videolist'
+  // This should come from the app.js through prop. 
+  const url = 'http://localhost:8080/videos/videostub'
 
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const FS5VideoPlayer = () => {
     return <div>Loading...</div>;
   }
   else {
-    //console.log(items[0].src);
+    console.log(items.src);
     //console.log("loading-nowPlaying", nowPlaying);
     if (nowPlaying === "") {
       SetNowPlaying(items[0]);

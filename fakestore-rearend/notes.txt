@@ -1,0 +1,42 @@
+1. create database 
+    a) start mongodb 'mongod'
+    b) connect to mongodb 'mongo'
+    c) switch to fs-videodb 'use fs-videodb'
+
+Preliminary database. This might change, but need to get something simple working. 
+database is fs-videodb
+
+        id: 0,
+        title: 'Scrub Jay Test Video',
+        video_id: 'sjtv01',
+        src: 'scrubjay',
+        poster: 'scrubjay_poster.png',
+        description: 'This is a test video of scrubjay',
+        defaultControls: true,
+        upvotes:0,
+        comments:[],
+
+
+2. Enter the above stub 
+    a) db.video_stubs.insert([{
+        'Hand Write the info if you do not know a better way. 
+        id:0,
+        title: 'title'
+    }])
+
+3. db.video_stubs.find{}
+
+4. Created a dummy database to connect first into express.
+    a) db.use dummydb
+    b) nice to have not using
+
+5. Add additional stub
+        id: 1,
+        title: 'Test Video 1',
+        video_id: 'tsv01',
+        src: 'testvideo',
+        poster: 'testvideo_poster.png',
+        description: 'This is a test video of weird kids',
+        defaultControls: false,
+        upvotes:0,
+        comments:[],

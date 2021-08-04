@@ -5,6 +5,7 @@ const url = require('url');
 const querystring = require('querystring');
 const router = express.Router();
 const playlist_json = require('../../media_library/videos/video_data/video_playlist.json');
+const { mongoClient, MongoClient } = require('mongodb');
 cors = require('cors');
 
 /**
@@ -56,9 +57,6 @@ module.exports = (params) => {
     router.get('/videolist', cors(), async (req, res) => {
         const contentList = playlist_json
         console.log("CONTENTLIST", contentList);
-        //need to make two files out of the json file, however this will be corrected when converting to mongoDB
-        //SECURITY HOLD REFINE WHEN LAUNCH
-        //res.setHeader('Access-Control-Allow-Origin', '*');
         return res.json(contentList);
     })
 
@@ -107,6 +105,28 @@ module.exports = (params) => {
         return true;
 
     })
+
+    //DB Connection Route
+    router.get('/videostub', cors(), async (req, res) => {
+        try {
+            const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
+            const db = client.db('fs-videodb');
+            const videoStubs = await db.collection('video_stubs').find({}).toArray();
+            const videoStubsObj = {
+                "id": "Test DB",
+                "path": "NA",
+                "videos": videoStubs,
+            }
+            res.json(videoStubsObj);
+            client.close();
+        } catch (err) {
+            console.log("ERROR", err)
+            res.status(500).json({ message: "oops something went wrong", err });
+        }
+    });
+
+
+
 
     return router;
 
