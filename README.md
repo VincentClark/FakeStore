@@ -15,7 +15,7 @@ Updated: 8/2/2021
 
 - Migrated from GitLab. Unable to bring history.
 
-## Verision 1.09
+### Verision 1.09
 
 - Created a JSON to drive the files through a video route 'fakestore-rearend/server/media-library/videos/video_data/video_playlist.json' (this is a temp solution before putting into DB)
 - Access the video_playlist.json through localhost:8080/videos/videolist
