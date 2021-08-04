@@ -23,6 +23,11 @@ Updated: 8/2/2021
 - video-player Comonents/Pages/FS5VideoPlayer imports JSON from video server.
 - Adjusted to update on src change ~/Components/Parts/HTML5Video.js
 
+### Version 1.10
+- Added Mongo DB to project. See "Notes.txt" for how to connect a mongo DB and provide it with the proper information. 
+- the ~/videolist route is still enabled. If you do not wish to set up mongo DB you can change FS5VideoPlayer.js line 17 replace videostub with videolist
+- In Mongo DB I added hook for future enhancements which allows commenting on the video. 
+
 ### To Build Front End
 
 1. Navigate to fakestore_frontend
@@ -55,10 +60,3 @@ Due to limitation test videos could not be a part of the build. For security rea
 _Version 1.0x_
 Place the videos in fakestore-rearend/server/media*library/videos_available/
 Use the url: localhost:8080/videos/videofiles?videosrc=\_your video*
-This will change in Version 1.1
-
-# Updates
-
-## Version 1.0
-
-Transfered this project from GitLab. The video files had to be removed from the project. See _how to add Videos_ to ensure a proper test.
