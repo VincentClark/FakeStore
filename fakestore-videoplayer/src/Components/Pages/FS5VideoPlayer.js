@@ -13,12 +13,24 @@ const FS5VideoPlayer = () => {
 
 
   // Needs to work on variable declaration and not hardcoded
-  // This should come from the app.js through prop. 
-  const url = 'http://localhost:8080/videos/videostub'
+  // This should come from the app.js through prop.
+  //for release I need to change this. 
+  const currenthost = window.location.host;
+  const currentport = window.location.port;
+  const currentprotocal = window.location.protocol;
 
+  const urli = () => {
+    if (currentport === "3000") {
+      return 'http://localhost:8080/videos/videostub'
+    } else {
+      return (`${currentprotocal}//${currenthost}/videos/videostub`);
+    }
+  };
 
+  //const url = 'http://localhost:8080/videos/videostub'
+  console.log(urli());
   useEffect(() => {
-    fetch(url)
+    fetch(urli())
       .then(response => response.json())
       .then(json => {
         SetItems(json.videos);
@@ -29,6 +41,7 @@ const FS5VideoPlayer = () => {
         SetIsLoaded(true);
       });
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (error) {
     return <div>{error}</div>;

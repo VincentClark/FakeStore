@@ -14,18 +14,18 @@ const app = require('../server/app')(config);
 */
 
 function normalizePort(val) {
-    const port = parseInt(val, 10);
-  
-    if (Number.isNaN(port)) {
-      // named pipe
-      return val;
-    }
-    if (port >= 0) {
-      // port number
-      return port;
-    }
-    return false;
+  const port = parseInt(val, 10);
+
+  if (Number.isNaN(port)) {
+    // named pipe
+    return val;
   }
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+  return false;
+}
 
 /**
  * Get port from enviornment and store in Express.
@@ -51,7 +51,7 @@ server.on('listening', () => {
 // Test Routes
 app.options('*', cors()) // include before other routes
 app.get('/', (req, res) => {
-    res.send('<h1>Hello World</h1>')
+  res.send('<h1>Hello World</h1>')
 })
 // // End Test Routes
 
