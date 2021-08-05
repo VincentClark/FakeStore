@@ -105,6 +105,27 @@ module.exports = (params) => {
         return true;
 
     })
+    //plan to move this into the video service
+    router.get('/videoposter/:name', async (req, res) => {
+        //respond with id
+        const qs = req.params.name;
+        const imageType = qs.substr(qs.indexOf('.') + 1);
+        const imagePath = await videos.returnWithImage(qs);
+        console.log(imagePath)
+        res.writeHead(200, {
+            'Content-Type': `image/${imageType}`
+        });
+        try {
+            createReadStream(imagePath).pipe(res);
+        } catch (e) {
+            console.log("ERROR", e)
+        }
+        return true;
+
+        //I don't think this is correct, but it is functional. 
+        // Refactor this later
+    })
+
 
     //DB Connection Route
     router.get('/videostub', cors(), async (req, res) => {

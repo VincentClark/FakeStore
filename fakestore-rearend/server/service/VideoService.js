@@ -24,7 +24,7 @@ class VideoService {
         this.file = '/testvideo1.mp4'
         this.readdir = promisify(fs.readdir);
         this.fileInfo = promisify(stat);
-        this.filepath = path.join(__dirname, "../", "media_library/videos/videos_available")
+        this.filepath = path.join(__dirname, "../", "media_library/videos/")
         this.filetemp_path = this.filepath + this.file;
         console.log("filetemp_path", this.filetemp_path);
 
@@ -85,12 +85,68 @@ class VideoService {
         console.log(videoId)
         // const pathP = new url.URLSearchParams("videosrc")
         // const pathP = req.query.videosrc;
-        const fileName = this.filepath + "/" + videoId + ".mp4"
+        const fileName = this.filepath + "/videos_available/" + videoId + ".mp4"
         const { size } = await this.fileInfo(fileName);
         console.log("SERVICE SIZE", size);
         //const range = req.headers.range;
         let videoObject = { "size": size, "fileName": fileName }
         return (videoObject)
+    }
+    //I shouldn't use .pn or figure out a way around this. 
+    // pn will send through a weird problem, and try to download a file if the server is not responding correctly. 
+    async returnWithImage(qs) {
+        console.log("imagepath", qs)
+        const fileName = this.filepath + "videos_images/" + qs
+        try {
+            const { size } = await this.fileInfo(fileName);
+            console.log("SERVICE SIZE", size);
+            return fileName;
+        } catch (err) {
+            console.log("ERROR")
+            return (this.filepath + "videos_images/scrubjay_icon.png")
+        }
+
+
+
+        //return (fileName)
+
+
+
+
+
+        //return (fileName);
+        // I will revisit this issue later. 
+        // here are some notes
+        /*
+         try {
+             const { size } = await this.fileInfo(fileName);
+             console.log("SERVICE SIZE", size);
+         } catch (err) {
+             console.log("ERROR", err);
+             throw err;
+         }
+         */
+
+        /*
+        try {
+            fs.stat(fileName, (err, stats) => {
+                if (err || !stats.isFile()) {
+                    console.log("file does not exist")
+                    //will make a default file name
+                    return (this.filepath + "videos_images/scrubjay_icon.png");
+                } else {
+                    console.log("file exists")
+                    return (fileName);
+                }
+            })
+        } catch (e) {
+            console.log("file does not exist")
+            //will make a default file name
+            return (this.filepath + "videos_images/scrubjay_icon.png");
+        }
+        }
+        */
+
     }
 
 
