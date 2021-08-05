@@ -28,7 +28,11 @@ Updated: 8/2/2021
 - the ~/videolist route is still enabled. If you do not wish to set up mongo DB you can change FS5VideoPlayer.js line 17 replace videostub with videolist
 - In Mongo DB I added hook for future enhancements which allows commenting on the video. 
 
-### To Build Front End
+### Version 1.10.1
+- Fixed Video Players NAV Style
+
+
+## To Build Front End
 
 1. Navigate to fakestore_frontend
 1. npm install
@@ -37,10 +41,55 @@ Updated: 8/2/2021
 1. copy folder build fakestore_frontend/ to fakestore_rearend/build
 1. NOTE - There is a current build existing in both the Front End and Video portions
 
-### To Build Video-Player
+I am going to keep the style design in this version, which diverts from the videoplayer's nav.
+### Setting up the Nav
+In App.js (frontend and video player)
+add or subtract contents in const navConfig
+``` javascript
+const navConfig = [
+    {
+      id: 1,
+      title: "Home",
+      ref: "/videoplayer",
+      component: HomePage,
+    },
+    {
+      id: 2,
+      title: "Video-React",
+      ref: "/videoplayer/videoreact",
+      component: VideoReact,
+    },
+    {
+      id: 3,
+      title: "React-Player",
+      ref: "/videoplayer/reactplayer",
+      component: ReactPlayer
+    },
+    {
+      id: 4,
+      title: "PlyrReact",
+      ref: "/videoplayer/plyrreact",
+      component: PlyrReact,
+    }, {
+      id: 5,
+      title: "FSVideoPlayer",
+      ref: "/videoplayer/fsvideoplayer",
+      component: FS5VideoPlayer,
+    }
+
+```
+
+
+## To Build Video-Player
 
 ### To start dev server
 
+
+### Now requires mongodb
+Instructions to come. 
+
+## To Enter Project
+Once it is set up, go to "Video 'Shorts'" > FSPlayer Everything else is under construction. 
 #### **NOTE** there are no enviornment dependincies as of 5/24/2021
 
 1. navigate to fakestore_rearend
