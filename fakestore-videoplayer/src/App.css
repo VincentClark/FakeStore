@@ -147,7 +147,7 @@ nav a {
 
 nav a:hover {
   background: rgb(70, 70, 70);
-  color: rgb(251, 216, 216);
+  color: rgb(226, 226, 226);
 }
 
 #page-body {
@@ -216,3 +216,7 @@ footer {
   background: rgb(61, 61, 61);
   color: white;
 }
+
+/*
+menustyles 8.5.2021
+*/
