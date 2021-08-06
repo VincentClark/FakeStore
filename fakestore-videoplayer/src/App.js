@@ -9,6 +9,8 @@ import Footer from "./Components/Parts/Footer";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import FS5VideoPlayer from "./Components/Pages/FS5VideoPlayer";
+import Video_Uploader from "./Components/Pages/VideoUploader";
+
 
 
 function App() {
@@ -60,6 +62,7 @@ function App() {
                 <Route key={element.id} path={element.ref} component={element.component} exact />
               ))
             }
+            <Route path="/videoplayer/VideoUploader" component={Video_Uploader} exact />
             <Route path="*" component={NotFound} />
 
           </Switch>

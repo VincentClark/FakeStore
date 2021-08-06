@@ -79,6 +79,9 @@ const FS5VideoPlayer = () => {
   }
   return (
     <>
+      <div>
+        <a href="/videoplayer/VideoUploader">Upload Video</a>
+      </div>
       <div className="">
         <HTML5Video
           videoInfo={nowPlaying}

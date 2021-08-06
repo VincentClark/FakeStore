@@ -42,13 +42,20 @@ const HTML5Video = ({ videoInfo }) => {
   return (
     <div className="container">
 
-      <h2>HTMLFiveVideo</h2>
+      <h2>{videoInfo.title}</h2>
       <video width="720" controls={videoInfo.defaultControls} ref={videoRef}>
         <source src={url} type="video/mp4" />
 
       </video>
+      <div className="container-tbd">
+
+        {videoInfo.description}
 
 
+      </div>
+      <div className="container-tbd">
+        Up Votes: {videoInfo.upvotes}
+      </div>
     </div>
   );
 };
