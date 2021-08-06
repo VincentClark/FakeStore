@@ -18,6 +18,14 @@ const FS5VideoPlayer = () => {
   const currenthost = window.location.host;
   const currentport = window.location.port;
   const currentprotocal = window.location.protocol;
+  const path = () => {
+    if (currentprotocal === "http:") {
+      return 'http://localhost:8080/videos'
+    } else {
+      return `${currentprotocal}//${currenthost}${currentport}/videos/`;
+    }
+  };
+
 
   const urli = () => {
     if (currentport === "3000") {
@@ -54,10 +62,11 @@ const FS5VideoPlayer = () => {
     //console.log("loading-nowPlaying", nowPlaying);
     if (nowPlaying === "") {
       SetNowPlaying(items[0]);
-      // console.log("Initial Load")
+      console.log("Initial Loadd")
     }
     else {
       // console.log("all good")
+
     }
   }
 
@@ -70,20 +79,20 @@ const FS5VideoPlayer = () => {
   }
   return (
     <>
-      <div className="container-fluid temp-container">
+      <div className="">
         <HTML5Video
           videoInfo={nowPlaying}
         />
-        <div>
+        <div className="grid-container_vc">
           {
             // Map Video List 
             //
 
             items.map((videos, index) => {
               return (
-                <div key={videos.id}>
+                <div key={videos.id} className="grid_item">
                   <a href={`#${index}`} onClick={() => playVideo(index)}>
-                    {videos.title}
+                    <img src={`${path()}/videoimage/${videos.src}_icon.png`} alt={videos.title} className="video_icon" />
                   </a>
                 </div>
               )

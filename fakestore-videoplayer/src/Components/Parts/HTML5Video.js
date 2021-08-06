@@ -40,7 +40,7 @@ const HTML5Video = ({ videoInfo }) => {
 
   //`${urlPath()}/videos/videofiles?videosrc=${videoInfo.src}}
   return (
-    <div>
+    <div className="container">
 
       <h2>HTMLFiveVideo</h2>
       <video width="720" controls={videoInfo.defaultControls} ref={videoRef}>

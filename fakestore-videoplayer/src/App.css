@@ -24,10 +24,18 @@ There will be a global style and a site specific folder
   margin: 0px;
 }
 .container-fluid {
-  width: 1080px;
+  width: 720px;
+  margin: 0px auto;
+
+  border: 2px solid red;
+}
+.container-fluid-videoplayer {
+  width: 720px;
   margin: 0px auto;
   position: relative;
+  border: 1px solid green;
 }
+
 .temp-container {
   padding-bottom: 200px;
 }
@@ -35,6 +43,18 @@ There will be a global style and a site specific folder
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 18px;
+}
+.video_icon {
+  width: 100%;
+}
+.video_src_container {
+  width: 720px;
+  height: 100%;
+  border: 1px solid black;
+}
+.video_icon_container {
+  width: 100px;
+  height: 100px;
 }
 /*
   Test Styles Start
@@ -73,15 +93,7 @@ figure video {
 .grid-child {
   background-color: cornsilk;
 }
-.grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 2px;
 
-  width: 1000px;
-  margin: 0px auto;
-  position: relative;
-}
 /*
   End Test Styles
   */
@@ -95,11 +107,7 @@ figure video {
   margin: 0px auto;
   position: relative;
 }
-.container-fluid {
-  width: 1080px;
-  margin: 0px auto;
-  position: relative;
-}
+
 button {
   padding: 16px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -220,3 +228,29 @@ footer {
 /*
 menustyles 8.5.2021
 */
+/* Grid */
+.grid-container_vc {
+  display: grid;
+  grid-gap: 40px 60px;
+  grid-template-columns: auto auto auto auto;
+  padding: 5px;
+  width: 720px;
+}
+
+.grid-item {
+  padding: 5px;
+  background-color: antiquewhite;
+  width: 100px;
+}
+
+.container_vc {
+  margin: 0px auto;
+  padding: 0px;
+  position: relative;
+}
+
+.container_xc {
+  width: 800px;
+  margin: 5px auto;
+  position: relative;
+}

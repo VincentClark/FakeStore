@@ -106,7 +106,7 @@ module.exports = (params) => {
 
     })
     //plan to move this into the video service
-    router.get('/videoposter/:name', async (req, res) => {
+    router.get('/videoimage/:name', async (req, res) => {
         //respond with id
         const qs = req.params.name;
         const imageType = qs.substr(qs.indexOf('.') + 1);

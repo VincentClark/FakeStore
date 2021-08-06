@@ -1,11 +1,11 @@
 import Header from "./Components/Header";
-import HomePage from "./Components/HomePage";
+import HomePage from "./Components/Pages/HomePage";
 import NavBar from "./Components/NavBar"
 import ReactPlayer from "./Components/Pages/ReactPlayer"
 import VideoReact from "./Components/Pages/VideoReact"
 import NotFound from "./Components/Pages/NotFound"
 import PlyrReact from "./Components/Pages/PlyrReact";
-
+import Footer from "./Components/Parts/Footer";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import FS5VideoPlayer from "./Components/Pages/FS5VideoPlayer";
@@ -49,20 +49,26 @@ function App() {
   return (
 
     <Router>
-      <div className="fluid-container">
-        <NavBar navConfig={navConfig} />
-        <Header title={"React VideoPlayer Evaluation"} />
-        <Switch>
-          {
-            navConfig.map((element) => (
-              <Route key={element.id} path={element.ref} component={element.component} exact />
-            ))
-          }
-          <Route path="*" component={NotFound} />
+      <div className="container_vc">
 
-        </Switch>
+        <NavBar navConfig={navConfig} />
+        <div className="container_xc">
+          <Header title={"React VideoPlayer Evaluation"} />
+          <Switch>
+            {
+              navConfig.map((element) => (
+                <Route key={element.id} path={element.ref} component={element.component} exact />
+              ))
+            }
+            <Route path="*" component={NotFound} />
+
+          </Switch>
+        </div>
+        <Footer />
+
       </div>
     </Router>
+
   );
 }
 

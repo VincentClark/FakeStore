@@ -23,6 +23,15 @@ database is fs-videodb
         id:0,
         title: 'title'
     }])
+    id:4,
+    title: 'Scrub Jay Different Angle Lazy',
+    video_id: 'sjtv04',
+    src: 'scrubjay_3_icon.png',
+    poster: 'scrubjay_3_poster.png',
+    description: 'Just another blue test x3',
+    defaultControls: true,
+    upvotes:0,
+    comments:[],
 
 3. db.video_stubs.find{}
 
