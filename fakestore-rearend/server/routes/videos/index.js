@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const fs = require('fs');
 const url = require('url');
 //const { URLSearchParams } = require('url');
@@ -7,6 +8,8 @@ const router = express.Router();
 const playlist_json = require('../../media_library/videos/video_data/video_playlist.json');
 const { mongoClient, MongoClient } = require('mongodb');
 cors = require('cors');
+
+
 
 /**
  * ENABLING CORS FOR THIS SECTION
@@ -21,6 +24,8 @@ const {
     createWriteStream
 
 } = require('fs');
+const upload = multer({ dest: './uploads/' });
+//const upload = multer();
 //routes to service
 module.exports = (params) => {
     const { videos } = params;
@@ -141,10 +146,49 @@ module.exports = (params) => {
             res.json(videoStubsObj);
             client.close();
         } catch (err) {
-            console.log("ERROR", err)
-            res.status(500).json({ message: "oops something went wrong", err });
+            console.log("ERROR Connecting to DB, it might be down, putting falling back to json file")
+            // res.status(500).json({ message: "oops something went wrong", err });
+            const contentList = playlist_json
+            console.log("CONTENTLIST", contentList);
+            return res.json(contentList);
         }
     });
+
+    router.post('/videoupload', cors(), upload.none(), async (req, res) => {
+        try {
+            console.log("params", params)
+            // const video_stub = {
+            //     "id": req.body.id,
+            //     "src": req.body.src,
+            //     "icon": req.body.icon,
+            //     "title": req.body.title,
+            //     "description": req.body.description,
+            //     "poster": req.body.poster,
+            //     "defaultControls": req.body.defaultControls,
+            //     "creator": req.body.creator,
+            // }
+            // const video_stub = {
+            //     "id": req.body.id,
+            //     "title": req.body.title,
+            //     "description": req.body.description,
+
+            // }
+            console.log("body", req.body.id);
+
+
+            // This needs to be adjusted for production
+            // res.sendFile("http://localhost:3000/videoplayer/videouploaderconfirmation");
+            return res.send("got it");
+
+            //const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
+        }
+        catch (err) {
+            console.log("error", req.query);
+            console.log("ERROR", err)
+        }
+    })
+
+    // 
 
 
 

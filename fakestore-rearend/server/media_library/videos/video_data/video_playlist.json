@@ -8,8 +8,12 @@
         "video_id": "sjtv01",
         "src": "scrubjay",
         "poster": "scrubjay_poster.png",
+        "icon": "scrubjay_icon.png",
         "description": "This is a test video of a friendly scrubjay",
-        "defaultControls": true
+        "defaultControls": true,
+        "creator": "Vincent Clark",
+        "upvotes": 0,
+        "comments":[]
     },
     {
         "id":"1",
@@ -17,8 +21,12 @@
         "video_id": "tstv01",
         "src": "testvideo",
         "poster": "testvideo_poster.png",
+        "icon" : "testvideo_icon.png",
         "description": "Random Test Video",
-        "defaultControls": true
+        "defaultControls": true,
+        "creator": "Vincent Clark",
+        "upvotes": 0,
+        "comments":[]
     }
 ]
 }

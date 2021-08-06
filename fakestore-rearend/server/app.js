@@ -5,20 +5,24 @@ const routes = require('./routes');
 const cors = require('cors');
 const VideoService = require('./service/VideoService')
 const BuildService = require('./service/BuildService')
-//place config in module export
-module.exports = (config) =>{
-    const app = express();
-    //need to add in a better config
-    // trace up
-    //route management
-    const videos = new VideoService();
-    const builder = new BuildService();
-    app.locals.title = "FakeSore [v.0.1]";
-    app.use("/", express.static(path.join(__dirname, '/build')));
-    app.use("/videoplayer", express.static(path.join(__dirname, '/build_video')));
+const bodyParser = require('body-parser');
 
-    //service linkage
-    app.use('/', routes({videos},{builder}))
+//place config in module export
+module.exports = (config) => {
+  const app = express();
+  //need to add in a better config
+  // trace up
+  //route management
+  const videos = new VideoService();
+  const builder = new BuildService();
+  app.locals.title = "FakeSore [v.0.1]";
+
+  app.use("/", express.static(path.join(__dirname, '/build')));
+  app.use("/videoplayer", express.static(path.join(__dirname, '/build_video')));
+  //app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ extended: true }));
+  //service linkage
+  app.use('/', routes({ videos }, { builder }))
   // cors directives
   //app.use(cors());
 
@@ -41,5 +45,5 @@ module.exports = (config) =>{
     res.status(status);
     res.render('error');
   });
-    return app
-} 
+  return app
+}
