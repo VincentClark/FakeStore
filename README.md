@@ -30,6 +30,8 @@ Updated: 8/2/2021
 
 ### Version 1.10.1
 - Fixed Video Players NAV Style
+- Some adjustments to the icon service. (renamed)
+- Fixed CSS issue. 
 
 
 ## To Build Front End
