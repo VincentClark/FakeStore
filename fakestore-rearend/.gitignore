@@ -4,6 +4,7 @@
 /node_modules
 /fakestore-backend/node_modules
 /fakestore-frontend/node_modules
+/fakestore-rearend/uploads
 /.pnp
 .pnp.js
 *.Identifier
