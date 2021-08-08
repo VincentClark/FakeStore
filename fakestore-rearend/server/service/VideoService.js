@@ -36,7 +36,7 @@ class VideoService {
     }
 
     async directoryCheck() {
-        const currentDirectory = await this.readdir(__dirname)
+        const currentDirectory = await this.readdir(this.filepath)
         return (currentDirectory);
     }
 

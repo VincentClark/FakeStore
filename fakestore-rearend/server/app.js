@@ -6,6 +6,7 @@ const cors = require('cors');
 const VideoService = require('./service/VideoService')
 const BuildService = require('./service/BuildService')
 const bodyParser = require('body-parser');
+const multer = require('multer');
 
 //place config in module export
 module.exports = (config) => {
@@ -39,11 +40,12 @@ module.exports = (config) => {
   // possible eslint issues
   app.use((err, req, res, next) => {
     res.locals.message = err.message;
-    const status = err.status || 500; // If no status is provided, let's assume it's a 500
-    res.locals.status = status;
+    //const status = err.status || 500; // If no status is provided, let's assume it's a 500
+    //res.locals.status = status;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
-    res.status(status);
-    res.render('error');
+    //res.status(status);
+    res.status(500).json({ message: "oops Something went wrong on app.use(..) [app.js]", err });
+    res.send('error at app.js level', err);
   });
   return app
 }

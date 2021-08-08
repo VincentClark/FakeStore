@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import FS5VideoPlayer from "./Components/Pages/FS5VideoPlayer";
 import Video_Uploader from "./Components/Pages/VideoUploader";
+import VideoUploaderConfirmation from "./Components/Pages/VideoUploaderConfirmation";
 
 
 
@@ -43,7 +44,14 @@ function App() {
       title: "FSVideoPlayer",
       ref: "/videoplayer/fsvideoplayer",
       component: FS5VideoPlayer,
-    }
+    },
+    {
+      id: 6,
+      title: "Video Uploader",
+      ref: "/videoplayer/videouploader",
+      component: Video_Uploader,
+    },
+
 
   ];
   //      <Route path="/reactvideoplayer" component = {ReactVideoPlayer} />
@@ -62,7 +70,8 @@ function App() {
                 <Route key={element.id} path={element.ref} component={element.component} exact />
               ))
             }
-            <Route path="/videoplayer/VideoUploader" component={Video_Uploader} exact />
+            <Route path="/videoplayer/videouploader" component={Video_Uploader} exact />
+            <Route path="/videoplayer/videouploaderconfirmation" component={VideoUploaderConfirmation} exact />
             <Route path="*" component={NotFound} />
 
           </Switch>

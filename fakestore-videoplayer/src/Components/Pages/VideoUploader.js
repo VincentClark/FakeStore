@@ -2,31 +2,34 @@
 const Video_Uploader = () => {
     //Will Reformat all of this - Goal to get it work and add new files to the server. 
     // currently no validation on the form.
+    const posturl = () => {
+        if (window.location.port === '3000') {
+            console.log("On Development");
+            return 'http://localhost:8080/videos/videoupload'
+        }
+        else {
+            console.log("On Production");
+            return (`${window.location.protocol}//${window.location.host}:${window.location.port}/videos/videoupload`)
+        }
+    }
     return (
         <div>
-            <form>
+            <form encType="multipart/form-data" method="post" action={posturl()}>
                 <div className="form-group">
                     <div>
-                        <lable>Video Title: </lable>
+                        <label>Video Title: </label>
                         <input name="video_title" />
                     </div>
                     <div>
-                        <lable>Video Description: </lable>
+                        <label>Video Description: </label>
                         <input name="video_description" />
 
                     </div>
                     <div>
                         <label>Upload Video File: </label>
-                        <input type="file" name="file" />
+                        <input type="file" name="video" />
                     </div>
-                    <div>
-                        <lable>Upload Video Poster: </lable>
-                        <input type="file" name="poster" />
-                    </div>
-                    <div>
-                        <lable>Upload Video Icon: </lable>
-                        <input type="file" name="icon" />
-                    </div>
+
 
                     <div>
                         <button type="submit">Submit</button>

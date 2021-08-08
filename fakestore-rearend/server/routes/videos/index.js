@@ -24,7 +24,7 @@ const {
     createWriteStream
 
 } = require('fs');
-const upload = multer({ dest: './uploads/' });
+const upload = multer({ dest: './uploads' });
 //const upload = multer();
 //routes to service
 module.exports = (params) => {
@@ -34,7 +34,6 @@ module.exports = (params) => {
         origin: 'localhost:3000',
         optionsSuccessStatus: 200
     }
-    console.log("PARAMS PARAMS params", params)
     router.get('/', async (req, res, next) => {
         try {
             //const videolist = await videos.getList();
@@ -137,6 +136,7 @@ module.exports = (params) => {
         try {
             const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
             const db = client.db('fs-videodb');
+
             const videoStubs = await db.collection('video_stubs').find({}).toArray();
             const videoStubsObj = {
                 "id": "Test DB",
@@ -153,38 +153,80 @@ module.exports = (params) => {
             return res.json(contentList);
         }
     });
-
-    router.post('/videoupload', cors(), upload.none(), async (req, res) => {
+    const filepath = "/home/vincentclark/FakeStore/fakestore-rearend/server/media_library/videos/video_upload/"
+    router.post('/videoupload', cors(), upload.single('video'), async (req, res) => {
+        console.log("/videoupload");
         try {
-            console.log("params", params)
-            // const video_stub = {
-            //     "id": req.body.id,
-            //     "src": req.body.src,
-            //     "icon": req.body.icon,
-            //     "title": req.body.title,
-            //     "description": req.body.description,
-            //     "poster": req.body.poster,
-            //     "defaultControls": req.body.defaultControls,
-            //     "creator": req.body.creator,
-            // }
-            // const video_stub = {
-            //     "id": req.body.id,
-            //     "title": req.body.title,
-            //     "description": req.body.description,
+            console.log("top of try");
+            const file = req.file;
+            console.log("file");
+            const fileName = file.originalname;
+            const filePath = filepath + fileName;
 
-            // }
-            console.log("body", req.body.id);
+            const fileStream = fs.createWriteStream(filePath, { flags: 'w' },);
+            console.log("fileName", fileName);
+            console.log("filePath", filePath);
 
+            req.pipe(fileStream);
+            console.log("file.pipe");
+            req.on('end', () => {
+                console.log("file.on('end')");
+                //const video = await videos.uploadVideo(fileName, filePath);
+                //const videoStub = await videos.createVideoStub(video);
+                const videoStubObj = {
+                    "video_title": videoStub.video_title,
+                    "video_description": videoStub.video_description,
+                    "video": videoStub.video,
+                }
+                res.json(videoStubObj);
+            });
+
+            console.log("body", "req.body.video_title");
+            //console.log(path.join(__dirname) + "/../../media_library/videos/video_upload/")
+
+            console.log(req.file.originalname);
+            // res.writeHead(200, {
+            //     'Content-Type': 'img/png'
+
+            // });
+
+            // const filelocation = path.join(__dirname, "../", "media_library/videos/video_upload/", req.file.originalname);
+            // console.log("routes/videos/index filelocation: ", filelocation)
+            // const fileStream = createWriteStream(filelocation);
+            // req.file.pipe(fileStream);
+            // fileStream.on('close', () => {
+            //     console.log("File Uploaded")
+            //     const video_title = req.body.video_title;
+            // }).on('error', (err) => {
+            //     console.log("ERROR", err)
+            // });
+            // //upload file to server
+
+
+            //res.send(req.file.originalname);
+
+            // const fileName = await upload.single('brian').destination("/home/vincentclark/FakeStore/fakestore-rearend/server/media_library/videos/video_upload/");
+            //
+            //
+            //
 
             // This needs to be adjusted for production
             // res.sendFile("http://localhost:3000/videoplayer/videouploaderconfirmation");
-            return res.send("got it");
+            //return res.sendFile("http://localhost:3000/videoplayer/videouploaderconfirmation");
+
+            // req.pipe(res);
+            // req.pipe(process.stdout);
+            // req.pipe(createWriteStream('../../media_library/videos/videos_uploaded'));
+            //res.redirect('http://localhost:3000/videoplayer/videouploaderconfirmation');
 
             //const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
         }
         catch (err) {
-            console.log("error", req.query);
-            console.log("ERROR", err)
+            //console.log("ERROR", err);
+            // res.status(500).json({ message: "oops something went wrong", err });
+            //send status response
+            res.status(500).json({ message: "routes/index:  something went wrong", err });
+
         }
     })
 
