@@ -7,6 +7,7 @@ const querystring = require('querystring');
 const router = express.Router();
 const playlist_json = require('../../media_library/videos/video_data/video_playlist.json');
 const { mongoClient, MongoClient } = require('mongodb');
+const middlewares = require('../middlewares');
 cors = require('cors');
 
 
@@ -24,7 +25,20 @@ const {
     createWriteStream
 
 } = require('fs');
-const upload = multer({ dest: './uploads' });
+const { request } = require('http');
+//configuring multer for uploads.
+// unsure if i should put this in rout or not. 
+const filepath = "/home/vincentclark/FakeStore/fakestore-rearend/server/media_library/videos/video_upload/"
+const filedest = "/home/vincentclark/FakeStore/fakestore-rearend/server/media_library/videos/videos_images/"
+const upload = multer({
+    dest: filepath,
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, filepath);
+        }
+    }),
+
+});
 //const upload = multer();
 //routes to service
 module.exports = (params) => {
@@ -153,7 +167,7 @@ module.exports = (params) => {
             return res.json(contentList);
         }
     });
-    const filepath = "/home/vincentclark/FakeStore/fakestore-rearend/server/media_library/videos/video_upload/"
+
     router.post('/videoupload', cors(), upload.single('video'), async (req, res) => {
         console.log("/videoupload");
         try {
@@ -168,63 +182,68 @@ module.exports = (params) => {
             console.log("filePath", filePath);
 
             req.pipe(fileStream);
-            console.log("file.pipe");
+            //console.log(fileStream);
+            const fileSize = file.size;
+            console.log("fileSize", fileSize);
+            const fileType = file.mimetype;
+            console.log("fileType", fileType);
+            const fileExt = file.extension;
+            console.log("fileExt", fileExt);
+            const fileNameNoExt = fileName.substr(0, fileName.indexOf('.'));
+            console.log("fileNameNoExt", fileNameNoExt);
+            const fileNameNoExtNoDot = fileNameNoExt.substr(0, fileNameNoExt.indexOf('.'));
+            console.log("fileNameNoExtNoDot", fileNameNoExtNoDot);
+
+            // fileStream.rename(filePath, filepath + fileNameNoExtNoDot + ".mp4", (err) => {
+            //     if (err) {
+            //         console.log("ERROR", err);
+            //         return res.status(500).json({ message: "oops something went wrong", err });
+            //     }
+            //     console.log("rename successful");
+            // });
+            //console.log("GET SIZE", upload.getSize(req));
+            console.log("REQ FILE NAME", req.file.filename);
+            console.log("REQ FILE PATH", req.file.path);
+            console.log("REQ FILE SIZE", req.file.size);
+            console.log("REQ ", req.file.originalname);
+
+
+
+
+            //fileStream.close();
+
+
+
+
             req.on('end', () => {
                 console.log("file.on('end')");
                 //const video = await videos.uploadVideo(fileName, filePath);
                 //const videoStub = await videos.createVideoStub(video);
-                const videoStubObj = {
-                    "video_title": videoStub.video_title,
-                    "video_description": videoStub.video_description,
-                    "video": videoStub.video,
-                }
-                res.json(videoStubObj);
+
+                fileStream.close();
+                //res.json({ message: "Getting somewhere" });
+                console.log("HERE");
             });
 
+
             console.log("body", "req.body.video_title");
+            let target_file = req.file.path;
+            console.log(target_file);
+
+            fs.rename(target_file, `${filedest}${file.originalname}`, (err) => {
+                if (err) {
+                    console.log("ERROR", err);
+                    //return res.status(500).json({ message: "oops something went wrong with removing", err });
+                }
+                console.log("rename successful");
+            });
+            res.send("done");
             //console.log(path.join(__dirname) + "/../../media_library/videos/video_upload/")
 
             console.log(req.file.originalname);
-            // res.writeHead(200, {
-            //     'Content-Type': 'img/png'
 
-            // });
-
-            // const filelocation = path.join(__dirname, "../", "media_library/videos/video_upload/", req.file.originalname);
-            // console.log("routes/videos/index filelocation: ", filelocation)
-            // const fileStream = createWriteStream(filelocation);
-            // req.file.pipe(fileStream);
-            // fileStream.on('close', () => {
-            //     console.log("File Uploaded")
-            //     const video_title = req.body.video_title;
-            // }).on('error', (err) => {
-            //     console.log("ERROR", err)
-            // });
-            // //upload file to server
-
-
-            //res.send(req.file.originalname);
-
-            // const fileName = await upload.single('brian').destination("/home/vincentclark/FakeStore/fakestore-rearend/server/media_library/videos/video_upload/");
-            //
-            //
-            //
-
-            // This needs to be adjusted for production
-            // res.sendFile("http://localhost:3000/videoplayer/videouploaderconfirmation");
-            //return res.sendFile("http://localhost:3000/videoplayer/videouploaderconfirmation");
-
-            // req.pipe(res);
-            // req.pipe(process.stdout);
-            // req.pipe(createWriteStream('../../media_library/videos/videos_uploaded'));
-            //res.redirect('http://localhost:3000/videoplayer/videouploaderconfirmation');
-
-            //const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
         }
         catch (err) {
-            //console.log("ERROR", err);
-            // res.status(500).json({ message: "oops something went wrong", err });
-            //send status response
             res.status(500).json({ message: "routes/index:  something went wrong", err });
 
         }

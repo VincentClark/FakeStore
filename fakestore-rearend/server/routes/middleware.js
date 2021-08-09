@@ -8,11 +8,9 @@ const upload = multer({
         }
     }),
 });
-module.exports.upload = upload;
 
-module.exports.handleIcon = file => async (req, res, next) => {
+module.exports.handleIcon = icons => async (req, res, next) => {
     if (!req.file) return next();
-
-    req.file.storeFileName = await videos.store(req.file.buffer);
+    req.file.storeFileName = await icons.storeFileName(req.file.buffer);
     next();
 };
