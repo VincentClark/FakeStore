@@ -34,6 +34,15 @@ Updated: 8/2/2021
 - Fixed CSS issue. 
 
 
+Updated: 8/10/2021
+
+## Branches
+08/10/2021 
+This will change soon. Testing workflows. 
+- main
+    - Testing
+        - vtc-dev (most current branch)
+
 ## To Build Front End
 
 1. Navigate to fakestore_frontend
