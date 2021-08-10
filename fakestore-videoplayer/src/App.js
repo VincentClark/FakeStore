@@ -11,7 +11,7 @@ import "./App.css";
 import FS5VideoPlayer from "./Components/Pages/FS5VideoPlayer";
 import Video_Uploader from "./Components/Pages/VideoUploader";
 import VideoUploaderConfirmation from "./Components/Pages/VideoUploaderConfirmation";
-
+import Video_Uploaderog from "./Components/Pages/VideoUploader_og";
 
 
 function App() {
@@ -50,6 +50,12 @@ function App() {
       title: "Video Uploader",
       ref: "/videoplayer/videouploader",
       component: Video_Uploader,
+    },
+    {
+      id: 7,
+      title: "VideoUploaderOG",
+      ref: "/videoplayer/videouploaderog",
+      component: Video_Uploaderog,
     },
 
 

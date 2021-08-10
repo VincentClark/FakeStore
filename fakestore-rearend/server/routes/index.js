@@ -26,6 +26,7 @@ module.exports = (params) => {
     const videoplayer_path = path.join(__dirname, "../", "../", "server/build_video/index.html")
     console.log("videoplayer_path", videoplayer_path)
     router.get("/videoplayer/*", async (req, res) => {
+        console.log("WHAT IS THIS");
         return res.sendFile(videoplayer_path)
     })
 

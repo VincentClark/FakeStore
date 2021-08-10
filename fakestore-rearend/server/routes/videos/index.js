@@ -168,12 +168,10 @@ module.exports = (params) => {
         }
     });
 
-    router.post('/videoupload', cors(), upload.single('video'), async (req, res) => {
+    router.post('/videoupload', cors(), middlewares.upload.single('video'), async (req, res) => {
         console.log("/videoupload");
         try {
-            console.log("top of try");
             const file = req.file;
-            console.log("file");
             const fileName = file.originalname;
             const filePath = filepath + fileName;
 
@@ -182,7 +180,6 @@ module.exports = (params) => {
             console.log("filePath", filePath);
 
             req.pipe(fileStream);
-            //console.log(fileStream);
             const fileSize = file.size;
             console.log("fileSize", fileSize);
             const fileType = file.mimetype;
@@ -194,25 +191,10 @@ module.exports = (params) => {
             const fileNameNoExtNoDot = fileNameNoExt.substr(0, fileNameNoExt.indexOf('.'));
             console.log("fileNameNoExtNoDot", fileNameNoExtNoDot);
 
-            // fileStream.rename(filePath, filepath + fileNameNoExtNoDot + ".mp4", (err) => {
-            //     if (err) {
-            //         console.log("ERROR", err);
-            //         return res.status(500).json({ message: "oops something went wrong", err });
-            //     }
-            //     console.log("rename successful");
-            // });
-            //console.log("GET SIZE", upload.getSize(req));
             console.log("REQ FILE NAME", req.file.filename);
             console.log("REQ FILE PATH", req.file.path);
             console.log("REQ FILE SIZE", req.file.size);
             console.log("REQ ", req.file.originalname);
-
-
-
-
-            //fileStream.close();
-
-
 
 
             req.on('end', () => {
@@ -226,7 +208,7 @@ module.exports = (params) => {
             });
 
 
-            console.log("body", "req.body.video_title");
+
             let target_file = req.file.path;
             console.log(target_file);
 
@@ -237,13 +219,15 @@ module.exports = (params) => {
                 }
                 console.log("rename successful");
             });
-            res.send("done");
+            //res.json({ message: "done" });
+            res.send("DONE");
             //console.log(path.join(__dirname) + "/../../media_library/videos/video_upload/")
 
-            console.log(req.file.originalname);
+            //console.log(req.file.originalname);
 
         }
         catch (err) {
+            console.log('TRY: route/index', err);
             res.status(500).json({ message: "routes/index:  something went wrong", err });
 
         }

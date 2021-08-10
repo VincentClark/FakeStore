@@ -69,4 +69,11 @@ UPDATE one idem or add one item to collection
 use fs_videodb
  db.video_stubs.update( { id: 1 }, { $set : { icon : "testvideo_icon.png" } })
 
- 
+ //updateing form fields.
+ db.vehicles.aggregate( [
+        {
+           $addFields: {
+              "specs.fuel_type": "unleaded"
+           }
+        }
+   ] )

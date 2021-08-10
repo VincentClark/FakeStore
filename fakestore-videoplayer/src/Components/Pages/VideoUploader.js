@@ -1,44 +1,94 @@
+import { useState } from 'react'
+const axios = require('axios');
+// set up state rules
 
-const Video_Uploader = () => {
-    //Will Reformat all of this - Goal to get it work and add new files to the server. 
-    // currently no validation on the form.
-    const posturl = () => {
-        if (window.location.port === '3000') {
-            console.log("On Development");
-            return 'http://localhost:8080/videos/videoupload'
-        }
-        else {
-            console.log("On Production");
-            return (`${window.location.protocol}//${window.location.host}:${window.location.port}/videos/videoupload`)
-        }
-    }
+const VideoUploader = () => {
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [isSelected, setIsSelected] = useState(false);
+
+    // const [videoDescription, setVideoDescription] = useState(null);
+    // const [videoTitle, setVideoTitle] = useState(null);
+    //const [videoTags, setVideoTags] = useState(null);
+    //const [videoCategory, setVideoCategory] = useState(null);
+    // const [videoAuthor, setVideoAuthor] = useState(null);
+
+    const changeHandler = (event) => {
+        setSelectedFile(event.target.files[0]);
+        console.log("before", isSelected);
+        setIsSelected(true);
+        console.log("after", isSelected);
+    };
+    const handleSubmission = () => {
+        console.log("selectedFile", selectedFile);
+
+        //    const config = {headers: { 'Content-Type': 'multipart/form-data'}};
+        const formData = new FormData();
+        formData.append("video", selectedFile);
+        console.log(formData.headers);
+        //  console.log(formData);
+        //  axios.post('http://localhost:8080/videos/videoupload', formData, config)
+        console.log(axios.defaults.headers);
+        axios(
+            {
+                method: "post",
+                url: 'http://localhost:8080/videos/videoupload',
+                data: formData,
+                headers: {
+
+                }
+            }
+        )
+
+        //delete formData.headers['Content-Type'];
+        // fetch('http://localhost:8080/videos/videoupload',
+        //     {
+        //         method: 'POST',
+        //         body: formData,
+        //         'Content-Type': 'multipart/form-data',
+        //         ...formData.getHeaders()
+
+        //     })
+        //     .then(response => response.json())
+        //     .then((result) => {
+        //         console.log('Success:', result);
+        //     })
+        //     .catch((error) => {
+        //         console.log('Error', error);
+        //     });
+    };
+
+
+
+
+    // const formData = new FormData();
+    // formData.append("file", selectedFile);
+    // formData.append("videoDescription", videoDescription);
+
+
+
     return (
         <div>
-            <form encType="multipart/form-data" method="post" action={posturl()}>
-                <div className="form-group">
-                    <div>
-                        <label>Video Title: </label>
-                        <input name="video_title" />
-                    </div>
-                    <div>
-                        <label>Video Description: </label>
-                        <input name="video_description" />
-
-                    </div>
-                    <div>
-                        <label>Upload Video File: </label>
-                        <input type="file" name="video" />
-                    </div>
-
-
-                    <div>
-                        <button type="submit">Submit</button>
-                    </div>
+            <h2>Video Uploader</h2>
+            <input type="file" id="video" name="video" onChange={changeHandler} />
+            {isSelected ? (
+                <div>
+                    <p>Filename: {selectedFile.name}</p>
+                    <p>Filetype: {selectedFile.type}</p>
+                    <p>Size in bytes: {selectedFile.size}</p>
+                    <p>
+                        lastModifiedDate:{' '}
+                        {selectedFile.lastModifiedDate.toLocaleDateString()}
+                    </p>
                 </div>
-            </form>
+            ) : (
+                <p>Select a file to show details</p>
+            )}
+            <div>
+                <button onClick={handleSubmission}>Submit</button>
+            </div>
         </div>
-    );
+    )
+
 }
 
-
-export default Video_Uploader
+export default VideoUploader
