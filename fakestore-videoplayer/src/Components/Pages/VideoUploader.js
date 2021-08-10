@@ -4,7 +4,11 @@ const axios = require('axios');
 
 const VideoUploader = () => {
     const [selectedFile, setSelectedFile] = useState(null);
+    const [selectIconFile, setSelectIconFile] = useState(null);
+    const [selectPosterFile, setSelectPosterFile] = useState(null);
     const [isSelected, setIsSelected] = useState(false);
+    const [isIconSelected, setIsIconSelected] = useState(false);
+    const [isPosterSelected, setIsPosterSelected] = useState(false);
 
     // const [videoDescription, setVideoDescription] = useState(null);
     // const [videoTitle, setVideoTitle] = useState(null);
@@ -14,9 +18,16 @@ const VideoUploader = () => {
 
     const changeHandler = (event) => {
         setSelectedFile(event.target.files[0]);
-        console.log("before", isSelected);
         setIsSelected(true);
-        console.log("after", isSelected);
+    };
+
+    const iconHandler = (event) => {
+        setIsIconSelected(true);
+        setSelectIconFile(event.target.files[0]);
+    };
+    const posterHandler = (event) => {
+        setIsPosterSelected(true);
+        setSelectPosterFile(event.target.files[0]);
     };
     const handleSubmission = () => {
         console.log("selectedFile", selectedFile);
@@ -69,16 +80,13 @@ const VideoUploader = () => {
     return (
         <div>
             <h2>Video Uploader</h2>
-            <input type="file" id="video" name="video" onChange={changeHandler} />
+            <label>Video</label><input type="file" id="video" name="video" onChange={changeHandler} />
+            <label>Icon</label><input type="file" id="video_icon" name="video_icon" onChange={iconHandler} />
+            <label>Poster</label><input type="file" id="video_thumbnail" name="video_thumbnail" onChange={posterHandler} />
             {isSelected ? (
                 <div>
-                    <p>Filename: {selectedFile.name}</p>
-                    <p>Filetype: {selectedFile.type}</p>
-                    <p>Size in bytes: {selectedFile.size}</p>
-                    <p>
-                        lastModifiedDate:{' '}
-                        {selectedFile.lastModifiedDate.toLocaleDateString()}
-                    </p>
+                    <p>Filename: {selectIconFile.name}</p>
+
                 </div>
             ) : (
                 <p>Select a file to show details</p>

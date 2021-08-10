@@ -171,30 +171,15 @@ module.exports = (params) => {
     router.post('/videoupload', cors(), middlewares.upload.single('video'), async (req, res) => {
         console.log("/videoupload");
         try {
-            const file = req.file;
+
+            const file = req.file[0];
+            console.log(file);
             const fileName = file.originalname;
             const filePath = filepath + fileName;
 
             const fileStream = fs.createWriteStream(filePath, { flags: 'w' },);
-            console.log("fileName", fileName);
-            console.log("filePath", filePath);
-
             req.pipe(fileStream);
-            const fileSize = file.size;
-            console.log("fileSize", fileSize);
-            const fileType = file.mimetype;
-            console.log("fileType", fileType);
-            const fileExt = file.extension;
-            console.log("fileExt", fileExt);
-            const fileNameNoExt = fileName.substr(0, fileName.indexOf('.'));
-            console.log("fileNameNoExt", fileNameNoExt);
-            const fileNameNoExtNoDot = fileNameNoExt.substr(0, fileNameNoExt.indexOf('.'));
-            console.log("fileNameNoExtNoDot", fileNameNoExtNoDot);
 
-            console.log("REQ FILE NAME", req.file.filename);
-            console.log("REQ FILE PATH", req.file.path);
-            console.log("REQ FILE SIZE", req.file.size);
-            console.log("REQ ", req.file.originalname);
 
 
             req.on('end', () => {
