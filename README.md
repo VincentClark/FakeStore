@@ -83,27 +83,40 @@ const navConfig = [
 
 
 ## To Build Video-Player
-
-### To start dev server
-
+- navigate to fakestore-videoplayer
+- npm run build
+- copy the files from the build folder to fakestore-rearend/video_build
 
 ### Now requires mongodb
-Instructions to come. 
+video db: fs-videodb
+collection: video_stubs
+see - fakestore-rearend/notes.txt on how to work with the mongodb collection
+
 
 ## To Enter Project
 Once it is set up, go to "Video 'Shorts'" > FSPlayer Everything else is under construction. 
 #### **NOTE** there are no enviornment dependincies as of 5/24/2021
-
 1. navigate to fakestore_rearend
 1. npm start
+1. If the current videoplayer build is in the video_build directory everything you need is present. 
 
-### Testing Video Service
+## Testing Video Service
 
 1. start rearend server
-1. In your web browser navigate to (http://localhost:3000/videos/videofiles?videosrc=testvideo1)
+1. In your web browser navigate to (http://localhost:8080/videos/videofiles?videosrc=testvideo1)
 1. To change video to second test replace the value in videosrc to ScrubJay_20210511.mp4
 1. If you would like to add a video ensue that it is .mp4 and place it in fakestore_rearend/server/media_library/videos_available
 1. ENSUER THAT YOU ADD ANY TEST VIDEOS TO .gitignore
+
+- Check to see if it is working */videos/dir 
+    - expected result: directroy listing 
+- */videos/videolist
+    - expected result: static json list
+- */videos/videofiles?videosrc=srubjay
+    - expected result: video of scrubjay
+- */vieos/video_stub
+    - expected result: mongodb of listed video stubs to power /video/fFS5VideoPlayer
+- */videos/videouploader
 
 ## Adding Videos
 
