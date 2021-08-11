@@ -29,6 +29,9 @@ const VideoUploader = () => {
         setIsPosterSelected(true);
         setSelectPosterFile(event.target.files[0]);
     };
+
+
+
     const handleSubmission = () => {
         console.log("selectedFile", selectedFile);
 
@@ -39,6 +42,7 @@ const VideoUploader = () => {
         //  console.log(formData);
         //  axios.post('http://localhost:8080/videos/videoupload', formData, config)
         console.log(axios.defaults.headers);
+
         axios(
             {
                 method: "post",
@@ -48,7 +52,14 @@ const VideoUploader = () => {
 
                 }
             }
-        )
+        ).then((response) => {
+            console.log(response);
+            //  console.log(response.data);
+            //  console.log(response.data.videoId);
+        }).catch((error) => {
+            console.log(error);
+        });
+
 
         //delete formData.headers['Content-Type'];
         // fetch('http://localhost:8080/videos/videoupload',
@@ -81,8 +92,8 @@ const VideoUploader = () => {
         <div>
             <h2>Video Uploader</h2>
             <label>Video</label><input type="file" id="video" name="video" onChange={changeHandler} />
-            <label>Icon</label><input type="file" id="video_icon" name="video_icon" onChange={iconHandler} />
-            <label>Poster</label><input type="file" id="video_thumbnail" name="video_thumbnail" onChange={posterHandler} />
+            <label>Icon</label><input type="file" id="icon" name="icon" onChange={iconHandler} />
+            <label>Poster</label><input type="file" id="poster" name="poster" onChange={posterHandler} />
             {isSelected ? (
                 <div>
                     <p>Filename: {selectIconFile.name}</p>

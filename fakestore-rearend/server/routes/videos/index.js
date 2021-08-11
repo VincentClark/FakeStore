@@ -167,13 +167,14 @@ module.exports = (params) => {
             return res.json(contentList);
         }
     });
-
-    router.post('/videoupload', cors(), middlewares.upload.single('video'), async (req, res) => {
+    // fields([{ name: 'video' }, { name: 'icon' }, { name: 'poster' }])
+    router.post('/videoupload', cors(), middlewares.upload.fields([{ name: 'video', maxCount: 1 }, { name: 'icon', maxCount: 1 }]), async (req, res) => {
         console.log("/videoupload");
         try {
-
-            const file = req.file[0];
-            console.log(file);
+            const { video } = req.files;
+            console.log("video", video);
+            // console.log("icon", icon);
+            const file = req.files;
             const fileName = file.originalname;
             const filePath = filepath + fileName;
 
@@ -194,10 +195,10 @@ module.exports = (params) => {
 
 
 
-            let target_file = req.file.path;
+            let target_file = files.path;
             console.log(target_file);
 
-            fs.rename(target_file, `${filedest}${file.originalname}`, (err) => {
+            fs.rename(target_file, `${filedest}${files.originalname}`, (err) => {
                 if (err) {
                     console.log("ERROR", err);
                     //return res.status(500).json({ message: "oops something went wrong with removing", err });
