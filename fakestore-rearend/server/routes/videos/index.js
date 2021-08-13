@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
 const url = require('url');
+const path = require('path');
 //const { URLSearchParams } = require('url');
 const querystring = require('querystring');
 const router = express.Router();
@@ -28,8 +29,10 @@ const {
 const { request } = require('http');
 //configuring multer for uploads.
 // unsure if i should put this in rout or not. 
-const filepath = "/home/vincentclark/FakeStore/fakestore-rearend/server/media_library/videos/video_upload/"
-const filedest = "/home/vincentclark/FakeStore/fakestore-rearend/server/media_library/videos/videos_images/"
+
+const filepath = path.join(__dirname, "../", "../", "/media_library/videos/video_upload/")
+console.log("FILE PATH!!!", filepath);
+const filedest = path.join(__dirname, "../", "../", "/media_library/videos/videos_available/")
 const upload = multer({
     dest: filepath,
     storage: multer.diskStorage({
@@ -38,7 +41,13 @@ const upload = multer({
         }
     }),
 
-});
+}).fields([{
+    name: 'video', maxCount: 1
+},
+{ name: 'icon', maxCount: 1 },
+{ name: 'poster', maxCount: 1 }
+
+]);
 //const upload = multer();
 //routes to service
 module.exports = (params) => {
@@ -168,49 +177,41 @@ module.exports = (params) => {
         }
     });
     // fields([{ name: 'video' }, { name: 'icon' }, { name: 'poster' }])
-    router.post('/videoupload', cors(), middlewares.upload.fields([{ name: 'video', maxCount: 1 }, { name: 'icon', maxCount: 1 }]), async (req, res) => {
+    router.post('/videoupload', cors(), upload, async (req, res) => {
         console.log("/videoupload");
         try {
-            const { video } = req.files;
-            console.log("video", video);
-            // console.log("icon", icon);
-            const file = req.files;
-            const fileName = file.originalname;
-            const filePath = filepath + fileName;
+            const video_file = req.files.video[0];
+            const video_fileName = req.files.video[0].originalname;
+            const video_filePath = filepath + video_fileName;
+            console.log("video_file", video_file);
+            console.log("video_fileName", video_fileName);
+            console.log("video_filePath", video_filePath);
 
-            const fileStream = fs.createWriteStream(filePath, { flags: 'w' },);
+
+            const fileStream = fs.createWriteStream(video_filePath, { flags: 'w' },);
             req.pipe(fileStream);
-
-
 
             req.on('end', () => {
                 console.log("file.on('end')");
-                //const video = await videos.uploadVideo(fileName, filePath);
-                //const videoStub = await videos.createVideoStub(video);
-
                 fileStream.close();
-                //res.json({ message: "Getting somewhere" });
                 console.log("HERE");
             });
 
 
 
-            let target_file = files.path;
-            console.log(target_file);
+            let target_file = video_file.path;
+            console.log("target_file", target_file);
 
-            fs.rename(target_file, `${filedest}${files.originalname}`, (err) => {
+            fs.rename(target_file, `${filedest}${video_file.originalname}`, (err) => {
                 if (err) {
                     console.log("ERROR", err);
+                    console.log("video_filePath", filepath);
                     //return res.status(500).json({ message: "oops something went wrong with removing", err });
+                } else {
+                    console.log("rename successful");
                 }
-                console.log("rename successful");
             });
-            //res.json({ message: "done" });
             res.send("DONE");
-            //console.log(path.join(__dirname) + "/../../media_library/videos/video_upload/")
-
-            //console.log(req.file.originalname);
-
         }
         catch (err) {
             console.log('TRY: route/index', err);
@@ -218,12 +219,6 @@ module.exports = (params) => {
 
         }
     })
-
     // 
-
-
-
-
     return router;
-
 }
