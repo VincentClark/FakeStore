@@ -75,12 +75,17 @@ const VideoUploader = () => {
     return (
         <div>
             <h2>Video Uploader</h2>
-            <div><label>Video</label><input type="file" id="video" name="video" onChange={changeHandler} /></div>
-            <div><label>Icon</label><input type="file" id="icon" name="icon" onChange={iconHandler} /></div>
-            <div><label>Poster</label><input type="file" id="poster" name="poster" onChange={posterHandler} /></div>
+            <div><label>Video Title: </label><input className="video-input" autocomplete="off" type="text" id="video_title" /></div>
+            <div><label>Video Description: </label><input className="video-input" autocomplete="off" type="text" id="video_description" /></div>
+            <div><label>Video Category: </label><input className="video-input" autocomplete="off" type="text" id="video_category" /></div>
+            <div><label>Video Author: </label><input className="video-input" autocomplete="off" type="text" id="video_author" /></div>
+            <div><label>Video Tags: </label><textarea id="tags" name="tags" rows="4" cols="50" disabled value="Not currently in use"></textarea></div>
+            <div><label>Video: </label><input className="video-input" type="file" id="video" name="video" accept="video/mp4" onChange={changeHandler} /></div>
+            <div><label>Icon: </label><input className="video-input" type="file" id="icon" name="icon" accept="image/*" onChange={iconHandler} /></div>
+            <div><label>Poster: </label><input className="video-input" type="file" id="poster" name="poster" accept="image/*" onChange={posterHandler} /></div>
             {isVideoSelected ? (
                 <div>
-                    <div>Filename: {selectedVideoFile.name}</div>
+                    <div>Filename: {selectedVideoFile.type}</div>
 
                 </div>
             ) : (

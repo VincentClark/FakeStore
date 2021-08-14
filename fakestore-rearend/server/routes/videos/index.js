@@ -30,23 +30,25 @@ const { request } = require('http');
 //configuring multer for uploads.
 // unsure if i should put this in rout or not. 
 
-const filepath = path.join(__dirname, "../", "../", "/media_library/videos/video_upload/")
-console.log("FILE PATH!!!", filepath);
-const filedest = path.join(__dirname, "../", "../", "/media_library/videos/videos_available/")
+const filepath_base = path.join(__dirname, "../", "../", "/media_library/videos/video_upload/")
+console.log("FILE PATH!!!", filepath_base);
+const filedest_base = path.join(__dirname, "../", "../", "/media_library/videos/");
+const filedest_video = filedest_base + "video_video_temp/"
+const filedest_images = filedest_base + "video_image_temp/"
+console.log("FILE_DEST VIDEOS", filedest_video);
+//this should be on middlewares but it does not work correctly. 
 const upload = multer({
-    dest: filepath,
+    dest: filepath_base,
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, filepath);
+            cb(null, filepath_base);
         }
     }),
 
-}).fields([{
-    name: 'video', maxCount: 1
-},
-{ name: 'icon', maxCount: 1 },
-{ name: 'poster', maxCount: 1 }
-
+}).fields([
+    { name: 'video', maxCount: 1 },
+    { name: 'icon', maxCount: 1 },
+    { name: 'poster', maxCount: 1 }
 ]);
 //const upload = multer();
 //routes to service
@@ -181,15 +183,37 @@ module.exports = (params) => {
         console.log("/videoupload");
         try {
             const video_file = req.files.video[0];
-            const video_fileName = req.files.video[0].originalname;
-            const video_filePath = filepath + video_fileName;
+            const icon_file = req.files.icon[0];
+            const poster_file = req.files.poster[0];
+            // get the base name of video_file
+            const file_name_base = video_file.originalname.split('.')[0];
+            // get the extension of icon_file
+            const icon_extension = icon_file.originalname.split('.')[1];
+            // get the extension of poster_file
+            const poster_extension = poster_file.originalname.split('.')[1];
+
+
+
+            const icon_fileName = file_name_base + "_icon" + "." + icon_extension;
+            const poster_fileName = file_name_base + "_poster" + "." + poster_extension;
+            const video_fileName = video_file.originalname;
+            const video_filePath = filepath_base + video_fileName;
+            const icon_filePath = filepath_base + icon_fileName;
+            const poster_filePath = filepath_base + poster_fileName;
             console.log("video_file", video_file);
             console.log("video_fileName", video_fileName);
             console.log("video_filePath", video_filePath);
+            console.log("icon_fileName", icon_fileName);
+            console.log("poster_fileName", poster_fileName);
 
 
             const fileStream = fs.createWriteStream(video_filePath, { flags: 'w' },);
             req.pipe(fileStream);
+            const iconStream = fs.createWriteStream(icon_filePath, { flags: 'w' },);
+            req.pipe(iconStream);
+            const posterStream = fs.createWriteStream(poster_filePath, { flags: 'w' },);
+            req.pipe(posterStream);
+
 
             req.on('end', () => {
                 console.log("file.on('end')");
@@ -199,19 +223,41 @@ module.exports = (params) => {
 
 
 
-            let target_file = video_file.path;
-            console.log("target_file", target_file);
 
-            fs.rename(target_file, `${filedest}${video_file.originalname}`, (err) => {
+            let target_video_file = video_file.path;
+            let target_icon_file = icon_file.path;
+            let target_poster_file = poster_file.path;
+            console.log("target_video_file", target_video_file);
+            //make this into a function when on service layer
+            fs.rename(target_video_file, `${filedest_video}${video_fileName}`, (err) => {
                 if (err) {
                     console.log("ERROR", err);
-                    console.log("video_filePath", filepath);
+                    console.log("video_filePath", video_filePath);
                     //return res.status(500).json({ message: "oops something went wrong with removing", err });
                 } else {
                     console.log("rename successful");
                 }
             });
-            res.send("DONE");
+            fs.rename(target_icon_file, `${filedest_images}${icon_fileName}`, (err) => {
+                if (err) {
+                    console.log("ERROR", err);
+                    console.log("video_filePath", icon_fileName);
+                    //return res.status(500).json({ message: "oops something went wrong with removing", err });
+                } else {
+                    console.log("rename successful");
+                }
+            });
+            fs.rename(target_poster_file, `${filedest_images}${poster_fileName}`, (err) => {
+                if (err) {
+                    console.log("ERROR", err);
+                    console.log("video_filePath", poster_filePath);
+                    //return res.status(500).json({ message: "oops something went wrong with removing", err });
+                } else {
+                    console.log("rename successful");
+                }
+            });
+
+            res.status(200).json({ message: "video uploaded successfully" });
         }
         catch (err) {
             console.log('TRY: route/index', err);
