@@ -178,7 +178,6 @@ module.exports = (params) => {
             return res.json(contentList);
         }
     });
-    // fields([{ name: 'video' }, { name: 'icon' }, { name: 'poster' }])
     router.post('/videoupload', cors(), upload, async (req, res) => {
         console.log("/videoupload");
         try {
@@ -191,39 +190,22 @@ module.exports = (params) => {
             const icon_extension = icon_file.originalname.split('.')[1];
             // get the extension of poster_file
             const poster_extension = poster_file.originalname.split('.')[1];
-
-
-
             const icon_fileName = file_name_base + "_icon" + "." + icon_extension;
             const poster_fileName = file_name_base + "_poster" + "." + poster_extension;
             const video_fileName = video_file.originalname;
             const video_filePath = filepath_base + video_fileName;
             const icon_filePath = filepath_base + icon_fileName;
             const poster_filePath = filepath_base + poster_fileName;
-            console.log("video_file", video_file);
-            console.log("video_fileName", video_fileName);
-            console.log("video_filePath", video_filePath);
-            console.log("icon_fileName", icon_fileName);
-            console.log("poster_fileName", poster_fileName);
-
-
             const fileStream = fs.createWriteStream(video_filePath, { flags: 'w' },);
             req.pipe(fileStream);
             const iconStream = fs.createWriteStream(icon_filePath, { flags: 'w' },);
             req.pipe(iconStream);
             const posterStream = fs.createWriteStream(poster_filePath, { flags: 'w' },);
             req.pipe(posterStream);
-
-
             req.on('end', () => {
-                console.log("file.on('end')");
                 fileStream.close();
-                console.log("HERE");
+                //needed logic to get the file name
             });
-
-
-
-
             let target_video_file = video_file.path;
             let target_icon_file = icon_file.path;
             let target_poster_file = poster_file.path;
@@ -233,7 +215,6 @@ module.exports = (params) => {
                 if (err) {
                     console.log("ERROR", err);
                     console.log("video_filePath", video_filePath);
-                    //return res.status(500).json({ message: "oops something went wrong with removing", err });
                 } else {
                     console.log("rename successful");
                 }
@@ -242,7 +223,6 @@ module.exports = (params) => {
                 if (err) {
                     console.log("ERROR", err);
                     console.log("video_filePath", icon_fileName);
-                    //return res.status(500).json({ message: "oops something went wrong with removing", err });
                 } else {
                     console.log("rename successful");
                 }
@@ -250,21 +230,30 @@ module.exports = (params) => {
             fs.rename(target_poster_file, `${filedest_images}${poster_fileName}`, (err) => {
                 if (err) {
                     console.log("ERROR", err);
-                    console.log("video_filePath", poster_filePath);
-                    //return res.status(500).json({ message: "oops something went wrong with removing", err });
+                    console.log("video_filePath", poster_filePath);;
                 } else {
                     console.log("rename successful");
                 }
             });
-
+            //create a stub for the video
+            //copiolet the file name to the stub
+            const video_stub = {
+                "name": video_fileName,
+                "path": filedest_video,
+                "icon": icon_fileName,
+                "poster": poster_fileName,
+                "size": video_file.size,
+                "type": video_file.type,
+                "created": new Date().toISOString(),
+                "updated": new Date().toISOString(),
+                "deleted": false,
+            }
             res.status(200).json({ message: "video uploaded successfully" });
         }
         catch (err) {
             console.log('TRY: route/index', err);
             res.status(500).json({ message: "routes/index:  something went wrong", err });
-
         }
     })
-    // 
     return router;
 }
