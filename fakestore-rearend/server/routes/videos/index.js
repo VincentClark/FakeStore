@@ -237,7 +237,6 @@ module.exports = (params) => {
             });
             //create a stub for the video
             //copiolet the file name to the stub
-            //this is wrong
             const video_stub = {
                 "name": video_fileName,
                 "path": filedest_video,
@@ -256,18 +255,20 @@ module.exports = (params) => {
             res.status(500).json({ message: "routes/index:  something went wrong", err });
         }
     })
-    // route for database (this can get messy);
-    router.post('/stubtest', cors(), async (req, res) => {
-        try {
-            const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
-            const db = client.db('fs-videodev');
-            const collection = db.collection('videostub');
+    return router;
+}
+
+router.post('/stubtest', cors(), async (req, res) => {
+    try {
+        const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
+        const db = client.db('fs-videodev');
+        const collection = db.collection('videostub');
 
 
-            return router;
-        }
-        catch (err) {
-            console.log('DB: route/index', err);
-            res.status(500).json({ message: "routes/index:  something went wrong", err });
-        }
-    });
+        return router;
+    }
+    catch (err) {
+        console.log('DB: route/index', err);
+        res.status(500).json({ message: "routes/index:  something went wrong", err });
+    }
+});
