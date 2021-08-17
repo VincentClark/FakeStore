@@ -16,26 +16,25 @@ const Schema = mongoose.Schema;
     },
 */
 const videoStubSchema = new Schema({
-
-    id: { type: Number, required: true },
     title: { type: String, required: true },
+    video_id: { type: String, required: true },
+    src: { type: String, required: true },
+    poster: { type: String, required: true },
+    icon: { type: String, required: true },
+    description: { type: String, required: true },
+    defaultControls: { type: Boolean, required: true },
+    creator: { type: String, required: true },
+    url: { type: String, required: false },
+    service: { type: String, required: true },
+    upvotes: { type: Number, required: true },
+    views: { type: Number, required: false },
+    tags: [],
+    comments: []
 
 }, { timestamps: true });
 
 // const stubModel = mongoose.model('videoStub', videoStubSchema);
 
-// video_id: { type: String, required: true },
-// src: { type: String, required: true },
-// poster: { type: String, required: true },
-// icon: { type: String, required: true },
-// description: { type: String, required: true },
-// defaultControls: { type: Boolean, required: true },
-// creator: { type: String, required: true },
-// url: { type: String, required: true },
-// service: { type: String, required: true },
-// upvotes: { type: Number, required: true },
-// tags: [],
-// comments: []
 
 
-module.exports = mongoose.model('stub', videoStubSchema, 'fsvideodev');
+module.exports = mongoose.model('videostub', videoStubSchema, 'fsvideodev');
