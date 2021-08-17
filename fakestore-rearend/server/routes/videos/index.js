@@ -8,8 +8,13 @@ const querystring = require('querystring');
 const router = express.Router();
 const playlist_json = require('../../media_library/videos/video_data/video_playlist.json');
 const { mongoClient, MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 const middlewares = require('../middlewares');
+const stubModel = require('../../models/stubModel');
 cors = require('cors');
+
+const dbase = mongoose.connection;
+
 
 
 
@@ -27,6 +32,7 @@ const {
 
 } = require('fs');
 const { request } = require('http');
+const { db } = require('../../models/stubModel');
 //configuring multer for uploads.
 // unsure if i should put this in rout or not. 
 
@@ -237,16 +243,22 @@ module.exports = (params) => {
             });
             //create a stub for the video
             //copiolet the file name to the stub
-            const video_stub = {
-                "name": video_fileName,
-                "path": filedest_video,
-                "icon": icon_fileName,
-                "poster": poster_fileName,
-                "size": video_file.size,
-                "type": video_file.type,
-                "created": new Date().toISOString(),
-                "updated": new Date().toISOString(),
-                "deleted": false,
+            // this is what goes into the DB, but the structure isn't right.
+            const video_stub = (stub) => {
+                return ({
+                    "id": stub.id,
+                    "name": stub.video_fileName,
+                    "path": stub.filedest_video,
+                    "icon": stub.icon_fileName,
+                    "poster": stub.poster_fileName,
+                    "size": stub.video_file.size,
+                    "type": stub.type,
+                    "url": stub.url,
+                    "service": stub.service,
+                    "created": new Date().toISOString(),
+                    "updated": new Date().toISOString(),
+                    "deleted": false,
+                });
             }
             res.status(200).json({ message: "video uploaded successfully" });
         }
@@ -258,17 +270,28 @@ module.exports = (params) => {
     return router;
 }
 
-router.post('/stubtest', cors(), async (req, res) => {
+router.post('/stubcreate', cors(), async (req, res) => {
     try {
-        const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
-        const db = client.db('fs-videodev');
-        const collection = db.collection('videostub');
+
+        console.log("dbase", dbase.db.databaseName);
+
+        // const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
+        // const db = client.db('fs-videodev');
+        // const collection = db.collection('videostub');
+        const stub = new stubModel({
+            "id": 21001,
+            "title": "Testtwo"
+        });
+        const saveStub = await stub.save();
+        console.log("saveStub", saveStub);
+        //res.status(200).json({ message: "connected to stub route" });
+        res.status(200).json({ message: "stub created successfully" });
 
 
-        return router;
     }
     catch (err) {
         console.log('DB: route/index', err);
         res.status(500).json({ message: "routes/index:  something went wrong", err });
     }
+    return router;
 });
