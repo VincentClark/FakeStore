@@ -163,6 +163,7 @@ module.exports = (params) => {
 
 
     //DB Connection Route
+    // will adjust to admin functionality. 
     router.get('/videostub', cors(), async (req, res) => {
         try {
             const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
@@ -185,9 +186,8 @@ module.exports = (params) => {
         }
     });
     router.post('/videoupload', cors(), upload, async (req, res) => {
-        let default_icon = false;
-        let default_poster = false;
         //this can be handled better. 
+        //does this still need to be in try catch?
         try {
             // get the base name of video_file
             // let icon_fileName = "default_icon.png";
@@ -236,6 +236,8 @@ module.exports = (params) => {
             });
             //video upload end
             //icon upload start
+
+
             let icon_file = req.files.icon[0];
             const icon_extension = icon_file.originalname.split('.')[1];
             let icon_fileName = file_name_base + "_icon" + "." + icon_extension;
@@ -332,18 +334,7 @@ module.exports = (params) => {
             }
             console.log("Step 1");
             const posterFileName = createPosterFile(req.files.poster[0])
-
             console.log("posterFileName", posterFileName);
-            //end poser upload
-
-
-
-
-
-            //create a stub for the video
-            //copiolet the file name to the stub
-            // this is what goes into the DB, but the structure isn't right.
-            // will need to readjust this once working.
             console.log("Working on DB portion");
             // try {
             //     console.log("Started DB portion");
