@@ -189,25 +189,6 @@ module.exports = (params) => {
         //this can be handled better. 
         //does this still need to be in try catch?
         try {
-            // get the base name of video_file
-            // let icon_fileName = "default_icon.png";
-            // let poster_fileName = "default_poster.png";
-            // get the extension of poster_file
-            // get the base name of icon_file
-            // } else {
-            //     default_icon = true;
-            //     const icon_file = "defacult_icon.png"
-            //     let icon_fileName = "default_icon.png";
-            //     console.log("PROBLEM");
-            // }
-            // const icon_file = req.files.icon[0];
-            // if (req.files.poster[0]) {
-            //need to handle if there is no file designated. 
-            // } else {
-            //     default_poster = true;
-            //     const poster_file = "default_poster.png"
-            //     const poster_fileName = "default_poster.png";
-            // }
             req.on('end', () => {
                 fileStream.close();
                 console.log("PANIC FILE STREAM CLOSED");
@@ -237,38 +218,56 @@ module.exports = (params) => {
             //video upload end
             //icon upload start
 
-
-            let icon_file = req.files.icon[0];
-            const icon_extension = icon_file.originalname.split('.')[1];
-            let icon_fileName = file_name_base + "_icon" + "." + icon_extension;
-            const icon_filePath = filepath_base + icon_fileName;
-            const iconStream = fs.createWriteStream(icon_filePath, { flags: 'w' },);
-            req.pipe(iconStream);
-            let target_icon_file = icon_file.path;
-            const rename = fs.rename(target_icon_file, `${filedest_images}${icon_fileName}`, (err) => {
-                if (err) {
-                    console.log("ERROR", err);
-                    console.log("video_filePath", icon_fileName);
+            const createIconFile = (reqIconFile) => {
+                if (reqIconFile) {
+                    const icon_fileName = reqIconFile.originalname;
+                    //const file_name_base = reqIconFile.originalname.split('.')[0];
+                    const icon_filePath = filepath_base + icon_fileName;
+                    const iconFileName = `${file_name_base}_icon.${reqIconFile.originalname.split('.')[1]}`
+                    const fileStream = fs.createWriteStream(icon_filePath, { flags: 'w' },);
+                    // should this be in a buffr?
+                    req.pipe(fileStream);
+                    const target_icon_file = reqIconFile.path;
+                    fs.rename(target_icon_file, `${filedest_images}${iconFileName}`, (err) => {
+                        if (err) {
+                            console.log("ERROR", err);
+                            console.log("icon_filePath", icon_filePath);
+                        } else {
+                            console.log("rename successful {1}");
+                            return icon_fileName;
+                        }
+                    });
                 } else {
-                    console.log("rename successful {1}");
+                    console.log("no icon file");
+                    return "default_icon.png";
                 }
-            });
-            console.log("end icon upload");
+            };
+
+            // let icon_file = req.files.icon[0];
+            // const icon_extension = icon_file.originalname.split('.')[1];
+            // let icon_fileName = file_name_base + "_icon" + "." + icon_extension;
+            // const icon_filePath = filepath_base + icon_fileName;
+            // const iconStream = fs.createWriteStream(icon_filePath, { flags: 'w' },);
+            // req.pipe(iconStream);
+            // let target_icon_file = icon_file.path;
+            // const rename = fs.rename(target_icon_file, `${filedest_images}${icon_fileName}`, (err) => {
+            //     if (err) {
+            //         console.log("ERROR", err);
+            //         console.log("video_filePath", icon_fileName);
+            //     } else {
+            //         console.log("rename successful {1}");
+            //         return createIconFile(icon_file);
+            //     }
+            // });
+            // console.log("end icon upload");
             //icon upload end
             //poster upload start
             //poster upload
-
-            const poster_file = req.files.poster[0];
-
-
-            // const poster_filePath = filepath_base + poster_fileName;
-            //const final_poster_path = `${filedest_images}${poster_fileName}`
-            console.log("CREATING POSTER FILE");
             //NEEDS TO BE ASNCH?
             const createPosterFile = (reqPosterFile) => {
-                console.log("createPosterFile");
+                console.log("createPosterFile", reqPosterFile);
                 if (reqPosterFile) {
-                    const poster_extension = poster_file.originalname.split('.')[1];
+                    const poster_extension = reqPosterFile.originalname.split('.')[1];
                     const poster_fileName = file_name_base + "_poster" + "." + poster_extension;
                     console.log("if statemen in createPoserFile");
                     //const poster_file = reqPosterFile;
@@ -277,14 +276,14 @@ module.exports = (params) => {
 
                     try {
                         const stream = fs.createWriteStream(reqPosterFile.path, { flags: 'w' },)
-                        console.log("posterStream", path)
                         req.pipe(stream);
                         const final_poster_path = `${filedest_images}${poster_fileName}`
-                        let target_poster_file = poster_file.path;
+                        let target_poster_file = reqPosterFile.path;
+                        console.log("reqPosterFile", reqPosterFile);
                         fs.rename(target_poster_file, final_poster_path, (err) => {
                             if (err) {
                                 console.log("ERROR", err);
-                                console.log("video_filePath", poster_filePath);
+                                console.log("poster_filePath", poster_filePath);
 
                                 return "default_poster.png"
                             } else {
@@ -296,6 +295,7 @@ module.exports = (params) => {
 
                     } catch (err) {
                         console.log("ERROR WRITING STREAM FOR POSTER", err);
+                        return "default_poster.png";
                     }
 
                     // console.log("posterStream", posterStream);
@@ -333,6 +333,9 @@ module.exports = (params) => {
 
             }
             console.log("Step 1");
+            const icon_fileName = createIconFile(req.files.icon[0]);
+            console.log("Step 2");
+            console.log("req.files.icon[0]", req.files.icon[0])
             const posterFileName = createPosterFile(req.files.poster[0])
             console.log("posterFileName", posterFileName);
             console.log("Working on DB portion");
