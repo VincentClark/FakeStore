@@ -198,23 +198,42 @@ module.exports = (params) => {
             //ONLY SHOULD BE AVIALBLE IF UPLOADS ARE COMPLETE
             //video upload start
             const video_file = req.files.video[0];
-            const video_fileName = video_file.originalname;
+            const createVideoFile = (videoFile) => {
+                const video_fileName = videoFile.originalname;
+                const file_name_base = video_file.originalname.split('.')[0];
+                const video_filePath = filepath_base + video_fileName;
+                const fileStream = fs.createWriteStream(video_filePath, { flags: 'w' },);
+                req.pipe(fileStream);
+                let target_video_file = video_file.path;
+                fs.rename(target_video_file, `${filedest_video}${video_fileName}`, (err) => {
+                    if (err) {
+                        console.log("ERROR", err);
+                        console.log("video_filePath", video_filePath);
+                    } else {
+                        console.log("rename successful {0}");
+                    }
+
+                });
+                return file_name_base;
+            }
+
+            //const video_fileName = video_file.originalname;
             //used for the icon and poster files
-            const file_name_base = video_file.originalname.split('.')[0];
-            const video_filePath = filepath_base + video_fileName;
-            const fileStream = fs.createWriteStream(video_filePath, { flags: 'w' },);
+            //const file_name_base = video_file.originalname.split('.')[0];
+            //const video_filePath = filepath_base + video_fileName;
+            //const fileStream = fs.createWriteStream(video_filePath, { flags: 'w' },);
             // should this be in a buffr? 
-            req.pipe(fileStream);
-            let target_video_file = video_file.path;
+            // req.pipe(fileStream);
+            //let target_video_file = video_file.path;
             // console.log("target_video_file", target_video_file);
-            fs.rename(target_video_file, `${filedest_video}${video_fileName}`, (err) => {
-                if (err) {
-                    console.log("ERROR", err);
-                    console.log("video_filePath", video_filePath);
-                } else {
-                    console.log("rename successful {0}");
-                }
-            });
+            // fs.rename(target_video_file, `${filedest_video}${video_fileName}`, (err) => {
+            //     if (err) {
+            //         console.log("ERROR", err);
+            //         console.log("video_filePath", video_filePath);
+            //     } else {
+            //         console.log("rename successful {0}");
+            //     }
+            // });
             //video upload end
             //icon upload start
 
@@ -276,7 +295,8 @@ module.exports = (params) => {
 
                     try {
                         const stream = fs.createWriteStream(reqPosterFile.path, { flags: 'w' },)
-                        req.pipe(stream);
+                            .then.req.pipe(stream)
+                        //req.pipe(stream);
                         const final_poster_path = `${filedest_images}${poster_fileName}`
                         let target_poster_file = reqPosterFile.path;
                         console.log("reqPosterFile", reqPosterFile);
@@ -332,6 +352,8 @@ module.exports = (params) => {
                 }
 
             }
+            const file_name_base = createVideoFile(video_file);
+            console.log(file_name_base);
             console.log("Step 1");
             const icon_fileName = createIconFile(req.files.icon[0]);
             console.log("Step 2");
