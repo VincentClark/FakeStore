@@ -1,15 +1,15 @@
-//fizbuzz function loops a variable number of times
-function fizbuzz(num) {
-    for (var i = 1; i <= num; i++) {
-        if (i % 3 === 0 && i % 5 === 0) {
-            console.log("fizzbuzz");
-        } else if (i % 3 === 0) {
-            console.log("fizz");
-        } else if (i % 5 === 0) {
-            console.log("buzz");
-        } else {
-            console.log(i);
-        }
+//create fibonacci sequence
+function fibonacci(n) {
+    if (n < 2) {
+        return n;
+    } else {
+        return fibonacci(n - 1) + fibonacci(n - 2);
     }
 }
-fizbuzz(1509)
+
+console.log(fibonacci(10));
+//loop through fibonacci sequence 15 times
+for (var i = 0; i < 15; i++) {
+    console.log(fibonacci(i));
+}
+

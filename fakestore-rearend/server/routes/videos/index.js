@@ -185,26 +185,17 @@ module.exports = (params) => {
             return res.json(contentList);
         }
     });
-    router.post('/videoupload', cors(), upload, async (req, res) => {
-        //this can be handled better. 
-        //does this still need to be in try catch?
+    router.post('/simpupload', cors(), upload, async (req, res, next) => {
         try {
-            req.on('end', () => {
-                fileStream.close();
-                console.log("PANIC FILE STREAM CLOSED");
-                //needed logic to get the file name
-            });
-            //make this into a function when on service layer
-            //ONLY SHOULD BE AVIALBLE IF UPLOADS ARE COMPLETE
-            //video upload start
-            const video_file = req.files.video[0];
+            const fileNameBase = (imgName, imgFun) => {
+                return (`${imgName}_${imgFun}`)
+            }
+
             const createVideoFile = (videoFile) => {
                 const video_fileName = videoFile.originalname;
-                const file_name_base = video_file.originalname.split('.')[0];
+                const file_name_base = videoFile.originalname.split('.')[0];
                 const video_filePath = filepath_base + video_fileName;
-                const fileStream = fs.createWriteStream(video_filePath, { flags: 'w' },);
-                req.pipe(fileStream);
-                let target_video_file = video_file.path;
+                let target_video_file = videoFile.path;
                 fs.rename(target_video_file, `${filedest_video}${video_fileName}`, (err) => {
                     if (err) {
                         console.log("ERROR", err);
@@ -214,153 +205,177 @@ module.exports = (params) => {
                     }
 
                 });
+
                 return file_name_base;
             }
 
-            //const video_fileName = video_file.originalname;
-            //used for the icon and poster files
-            //const file_name_base = video_file.originalname.split('.')[0];
-            //const video_filePath = filepath_base + video_fileName;
-            //const fileStream = fs.createWriteStream(video_filePath, { flags: 'w' },);
-            // should this be in a buffr? 
-            // req.pipe(fileStream);
-            //let target_video_file = video_file.path;
-            // console.log("target_video_file", target_video_file);
-            // fs.rename(target_video_file, `${filedest_video}${video_fileName}`, (err) => {
+            const imageDesignator = (imgObj, imgFun) => {
+                const imageObject = imgObj;
+                const imageExtension = imageObject.originalname.split('.').pop();
+                const imageName = `${fileNameBase("freefallingMoney", imgFun)}.${imageExtension}`
+                const imagePath = `${filedest_images}${imageName}`
+                const imageFile = imageObject.path;
+                fs.rename(imageFile, imagePath, (err) => {
+                    if (err) {
+                        console.log("ERROR", err)
+                        return (`default_${imgFun}.png`)
+                    } else {
+                        return (imageName)
+                    }
+                })
+            }
+            const posterFile = imageDesignator(req.files.poster[0], 'poster');
+            res.status(200).json({
+                message: "success",
+            });
+            // const posterObject = req.files.poster[0];
+            // const posterExtension = posterObject.originalname.split('.').pop();
+            // const posterName = `${fileNameBase()}.${posterExtension}`;
+            // const posterPath = `${filedest_images}${posterName}`;
+            // console.log("posterPath", posterPath)
+            // const posterFile = posterObject.path;
+            // const posterFileName = posterObject.filename;
+            // //may not need this step. 
+            // //const stream = createWriteStream(posterFile,{flags:'w'});    
+            // fs.rename(posterFile, `${posterPath}`, (err) => {
             //     if (err) {
-            //         console.log("ERROR", err);
-            //         console.log("video_filePath", video_filePath);
+            //         console.log("ERROR", err)
             //     } else {
-            //         console.log("rename successful {0}");
+            //         res.status(200).json({ message: "success" });
             //     }
-            // });
-            //video upload end
-            //icon upload start
 
-            const createIconFile = (reqIconFile) => {
+            // });
+
+        } catch (err) {
+            console.log("ERROR", err)
+        }
+    })
+
+    router.post('/videoupload', cors(), upload, async (req, res) => {
+        //this can be handled better. 
+        //does this still need to be in try catch?
+        try {
+            req.on('end', () => {
+                fileStream.close();
+                console.log("PANIC FILE STREAM CLOSED");
+                //needed logic to get the file name
+            });
+            const fileNameBase = (videoFile) => {
+                const fileName = videoFile.originalname;
+                const fileNameBase = fileName.substr(0, fileName.lastIndexOf('.'));
+                return fileNameBase;
+            }
+
+            const fileName = fileNameBase(req.files.video[0]);
+            console.log("FFILLLEEENAME", fileName);
+            const createVideoFile = (videoFile) => {
+                const video_fileName = videoFile.originalname;
+                const file_name_base = videoFile.originalname.split('.')[0];
+                const video_filePath = filepath_base + video_fileName;
+                const fileStream = fs.createWriteStream(video_filePath, { flags: 'w' },);
+                req.pipe(fileStream);
+                let target_video_file = videoFile.path;
+                fs.rename(target_video_file, `${filedest_video}${video_fileName}`, (err) => {
+                    if (err) {
+                        console.log("ERROR", err);
+                        console.log("video_filePath", video_filePath);
+                    } else {
+                        console.log("rename successful {0}");
+                    }
+
+                });
+
+                return file_name_base;
+            }
+            const createIconFile = (reqIconFile, base) => {
                 if (reqIconFile) {
                     const icon_fileName = reqIconFile.originalname;
+                    console.log("ICON FILE NAME", icon_fileName);
+                    console.log("base", base);
                     //const file_name_base = reqIconFile.originalname.split('.')[0];
                     const icon_filePath = filepath_base + icon_fileName;
-                    const iconFileName = `${file_name_base}_icon.${reqIconFile.originalname.split('.')[1]}`
+                    const iconFileName = `${base}_icon.${reqIconFile.originalname.split('.')[1]}`
                     const fileStream = fs.createWriteStream(icon_filePath, { flags: 'w' },);
                     // should this be in a buffr?
-                    req.pipe(fileStream);
                     const target_icon_file = reqIconFile.path;
-                    fs.rename(target_icon_file, `${filedest_images}${iconFileName}`, (err) => {
-                        if (err) {
-                            console.log("ERROR", err);
-                            console.log("icon_filePath", icon_filePath);
-                        } else {
-                            console.log("rename successful {1}");
-                            return icon_fileName;
-                        }
-                    });
+                    req.pipe(fileStream)
+                        .on('finish', () => {
+                            fs.rename(target_icon_file, `${filedest_images}${iconFileName}`, (err) => {
+                                if (err) {
+                                    console.log("ERROR", err);
+                                    console.log("icon_filePath", icon_filePath);
+                                } else {
+                                    console.log("rename successful {1}");
+                                    return icon_fileName;
+                                }
+                            });
+                        });
                 } else {
                     console.log("no icon file");
                     return "default_icon.png";
                 }
+
+
+            };
+            const createPosterFile = (reqPosterFile, base) => {
+                if (reqPosterFile) {
+                    console.log(reqPosterFile);
+                    const poster_fileName = reqPosterFile.originalname;
+                    console.log("POSTER FILE NAME:", poster_fileName);
+                    console.log("base", base);
+                    const file_name_base = reqPosterFile.originalname.split('.')[0];
+                    const poster_filePath = filepath_base + poster_fileName;
+                    const posterFileName = `${base}_poster.${reqPosterFile.originalname.split('.')[1]}`
+                    const fileStream = fs.createWriteStream(poster_filePath, { flags: 'w' },);
+
+                    // // should this be in a buffr?
+                    // console.log("fileStream::", poster_filePath);
+                    const target_poster_file = reqPosterFile.path;
+                    // console.log("target_poster_file", target_poster_file);
+                    // console.log("DEST:", `${filedest_images}${posterFileName}`);
+                    req.pipe(fileStream)
+                        .on('finish', () => {
+                            console.log("TPF", target_poster_file);
+                            fs.rename(target_poster_file, `${filedest_images}${posterFileName}`, (err) => {
+                                if (err) {
+                                    console.log("ERROR", err);
+                                    console.log("Poster_filePath", poster_filePath);
+                                } else {
+                                    console.log("rename successful {1}");
+                                    return poster_fileName;
+                                }
+                            });
+                        });
+                } else {
+                    console.log("no poster file");
+                    return "default_poster.png";
+                }
             };
 
-            // let icon_file = req.files.icon[0];
-            // const icon_extension = icon_file.originalname.split('.')[1];
-            // let icon_fileName = file_name_base + "_icon" + "." + icon_extension;
-            // const icon_filePath = filepath_base + icon_fileName;
-            // const iconStream = fs.createWriteStream(icon_filePath, { flags: 'w' },);
-            // req.pipe(iconStream);
-            // let target_icon_file = icon_file.path;
-            // const rename = fs.rename(target_icon_file, `${filedest_images}${icon_fileName}`, (err) => {
-            //     if (err) {
-            //         console.log("ERROR", err);
-            //         console.log("video_filePath", icon_fileName);
-            //     } else {
-            //         console.log("rename successful {1}");
-            //         return createIconFile(icon_file);
-            //     }
-            // });
-            // console.log("end icon upload");
-            //icon upload end
-            //poster upload start
-            //poster upload
-            //NEEDS TO BE ASNCH?
-            const createPosterFile = (reqPosterFile) => {
-                console.log("createPosterFile", reqPosterFile);
-                if (reqPosterFile) {
-                    const poster_extension = reqPosterFile.originalname.split('.')[1];
-                    const poster_fileName = file_name_base + "_poster" + "." + poster_extension;
-                    console.log("if statemen in createPoserFile");
-                    //const poster_file = reqPosterFile;
-                    console.log("reqPosterFile", reqPosterFile);
+            console.log("FILENAME", fileName);
+            // const file_name_base = createVideoFile(req.files.video[0])
+            // const icon_fileName = createIconFile(req.files.icon[0], fileName)
+            const poster_fileName = createPosterFile(req.files.poster[0], fileName)
 
-
-                    try {
-                        const stream = fs.createWriteStream(reqPosterFile.path, { flags: 'w' },)
-                            .then.req.pipe(stream)
-                        //req.pipe(stream);
-                        const final_poster_path = `${filedest_images}${poster_fileName}`
-                        let target_poster_file = reqPosterFile.path;
-                        console.log("reqPosterFile", reqPosterFile);
-                        fs.rename(target_poster_file, final_poster_path, (err) => {
-                            if (err) {
-                                console.log("ERROR", err);
-                                console.log("poster_filePath", poster_filePath);
-
-                                return "default_poster.png"
-                            } else {
-                                console.log("rename successful {2}");
-                                console.log(poster_fileName);
-                                return poster_fileName;
-                            }
-                        });
-
-                    } catch (err) {
-                        console.log("ERROR WRITING STREAM FOR POSTER", err);
-                        return "default_poster.png";
-                    }
-
-                    // console.log("posterStream", posterStream);
-                    // const postercreate = posterStream(reqPosterFile.path);
-                    // let poster_fileName = `${file_name_base}_poster.${poster_extension}`;
-                    // const target_poster_file = reqPosterFile.path;
-                    // const final_poster_path = `${filedest_images}${poster_fileName}`
-                    // try {
-
-                    //     // fs.rename(target_poster_file, final_poster_path, (err) => {
-                    //     //     if (err) {
-                    //     //         console.log("ERROR", err);
-                    //     //         console.log("video_filePath", poster_filePath);;
-                    //     //         return "default_poster.png"
-                    //     //     } else {
-                    //     //         console.log("rename successful {2}");
-                    //     //         console.log(poster_fileName);
-                    //     //         return poster_fileName;
-                    //     //     }
-                    //     // })
-
-
-                    // }
-                    // catch (err) {
-                    //     console.log("ERROR Poster File", err);
-                    //     return ("default_poster.png");
-                    // }
-
-
-                }
-                else {
-                    console.log("else statement in createPosterFile");
-                    return ("default_poster.png");
-                }
-
-            }
-            const file_name_base = createVideoFile(video_file);
-            console.log(file_name_base);
+            const video_file = req.files.video[0];
             console.log("Step 1");
-            const icon_fileName = createIconFile(req.files.icon[0]);
+            const file_name_base = createVideoFile(video_file);
+            console.log("Step 1 Completed", file_name_base);
+
             console.log("Step 2");
-            console.log("req.files.icon[0]", req.files.icon[0])
+            //const icon_fileName = createIconFile(req.files.icon[0], fileName);
+            //console.log("Step 2 Completed", icon_fileName);
+            console.log("Step 3");
             const posterFileName = createPosterFile(req.files.poster[0])
-            console.log("posterFileName", posterFileName);
-            console.log("Working on DB portion");
+            // console.log("Step 3 Completed", posterFileName);
+
+            console.log(file_name_base);
+
+
+
+            // console.log("icon_fileName", icon_fileName);
+            // console.log("posterFileName", posterFileName);
+            // console.log("Working on DB portion");
             // try {
             //     console.log("Started DB portion");
             //     let creator = "vincent"
