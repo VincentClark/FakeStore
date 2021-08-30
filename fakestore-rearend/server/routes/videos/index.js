@@ -192,10 +192,11 @@ module.exports = (params) => {
             }
 
             const createVideoFile = (videoFile) => {
+                const videoObject = videoFile;
                 const video_fileName = videoFile.originalname;
                 const file_name_base = videoFile.originalname.split('.')[0];
                 const video_filePath = filepath_base + video_fileName;
-                let target_video_file = videoFile.path;
+                const target_video_file = videoFile.path;
                 fs.rename(target_video_file, `${filedest_video}${video_fileName}`, (err) => {
                     if (err) {
                         console.log("ERROR", err);
@@ -203,13 +204,13 @@ module.exports = (params) => {
                     } else {
                         console.log("rename successful {0}");
                     }
-
                 });
-
                 return file_name_base;
-            }
+            };
 
-            const imageDesignator = (imgObj, imgFun) => {
+            const videoFile = createVideoFile(req.files.video[0]);
+            console.log(videoFile);
+            const imageDesignator = (imgObj, imgBase, imgFun) => {
                 const imageObject = imgObj;
                 const imageExtension = imageObject.originalname.split('.').pop();
                 const imageName = `${fileNameBase("freefallingMoney", imgFun)}.${imageExtension}`
@@ -224,7 +225,8 @@ module.exports = (params) => {
                     }
                 })
             }
-            const posterFile = imageDesignator(req.files.poster[0], 'poster');
+            const posterFile = imageDesignator(req.files.poster[0], videoFile, 'poster');
+            const iconFile = imageDesignator(req.files.icon[0], videoFile, 'icon');
             res.status(200).json({
                 message: "success",
             });
