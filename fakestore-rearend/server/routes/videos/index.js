@@ -190,7 +190,8 @@ module.exports = (params) => {
             const fileNameBase = (imgName, imgFun) => {
                 return (`${imgName}_${imgFun}`)
             }
-
+            const creator = req.body.creator;
+            console.log(creator);
             const createVideoFile = (videoFile) => {
                 const videoObject = videoFile;
                 const video_fileName = videoFile.originalname;
@@ -227,29 +228,19 @@ module.exports = (params) => {
             }
             const posterFile = imageDesignator(req.files.poster[0], videoFile, 'poster');
             const iconFile = imageDesignator(req.files.icon[0], videoFile, 'icon');
+            //DB Entry
+            const dbInsert = (videoFile, posterFile, iconFile) => {
+                return (
+                            
+
+                        )
+            }
             res.status(200).json({
                 message: "success",
             });
-            // const posterObject = req.files.poster[0];
-            // const posterExtension = posterObject.originalname.split('.').pop();
-            // const posterName = `${fileNameBase()}.${posterExtension}`;
-            // const posterPath = `${filedest_images}${posterName}`;
-            // console.log("posterPath", posterPath)
-            // const posterFile = posterObject.path;
-            // const posterFileName = posterObject.filename;
-            // //may not need this step. 
-            // //const stream = createWriteStream(posterFile,{flags:'w'});    
-            // fs.rename(posterFile, `${posterPath}`, (err) => {
-            //     if (err) {
-            //         console.log("ERROR", err)
-            //     } else {
-            //         res.status(200).json({ message: "success" });
-            //     }
-
-            // });
-
         } catch (err) {
             console.log("ERROR", err)
+            res.status(500).json({ message: "oops something went wrong on route /simpupload", err });
         }
     })
 
@@ -372,6 +363,7 @@ module.exports = (params) => {
             // console.log("Step 3 Completed", posterFileName);
 
             console.log(file_name_base);
+
 
 
 
