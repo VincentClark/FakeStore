@@ -17,7 +17,7 @@ const Schema = mongoose.Schema;
 */
 const videoStubSchema = new Schema({
     title: { type: String, required: true },
-    video_id: { type: String, required: true },
+    video_id: { type: String, required: false },
     src: { type: String, required: true },
     poster: { type: String, required: true },
     icon: { type: String, required: true },

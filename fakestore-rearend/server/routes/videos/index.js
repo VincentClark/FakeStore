@@ -167,9 +167,9 @@ module.exports = (params) => {
     router.get('/videostub', cors(), async (req, res) => {
         try {
             const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
-            const db = client.db('fs-videodb');
+            const db = client.db('fsvideodatabase');
 
-            const videoStubs = await db.collection('video_stubs').find({}).toArray();
+            const videoStubs = await db.collection('fsvideodev').find({}).toArray();
             const videoStubsObj = {
                 "id": "Test DB",
                 "path": "NA",
@@ -190,8 +190,6 @@ module.exports = (params) => {
             const fileNameBase = (imgName, imgFun) => {
                 return (`${imgName}_${imgFun}`)
             }
-            const creator = req.body.creator;
-            console.log(creator);
             const createVideoFile = (videoFile) => {
                 const videoObject = videoFile;
                 const video_fileName = videoFile.originalname;
@@ -208,39 +206,141 @@ module.exports = (params) => {
                 });
                 return file_name_base;
             };
+            console.log("YOU ARE HERE")
+            const imageDesignator = (imgObj = false, imgBase, imgFun) => {
+                console.log("NEXT");
+                if (imgObj) {
+                    console.log("IMG OBJ", imgObj);
+                    const imageObject = imgObj;
+                    const imageExtension = imageObject.originalname.split('.').pop();
+                    let imageName = `${fileNameBase(imgBase, imgFun)}.${imageExtension}`
+                    const imagePath = `${filedest_images}${imageName}`
+                    const imageFile = imageObject.path;
 
-            const videoFile = createVideoFile(req.files.video[0]);
-            console.log(videoFile);
-            const imageDesignator = (imgObj, imgBase, imgFun) => {
-                const imageObject = imgObj;
-                const imageExtension = imageObject.originalname.split('.').pop();
-                const imageName = `${fileNameBase("freefallingMoney", imgFun)}.${imageExtension}`
-                const imagePath = `${filedest_images}${imageName}`
-                const imageFile = imageObject.path;
-                fs.rename(imageFile, imagePath, (err) => {
-                    if (err) {
-                        console.log("ERROR", err)
-                        return (`default_${imgFun}.png`)
+                    fs.rename(imageFile, imagePath, (err) => {
+                        if (err) {
+                            console.log("ERROR ERROR", err)
+                            //   return (`default_${imgFun}.png`)
+                            imageName = `default_${imgFun}.png`
+
+                        } else {
+                            console.log("imageName", imageName)
+                            //   return (imageName)
+                        }
+                    })
+                    return imageName;
+                } else {
+                    return (`default_${imgFun}.png`)
+                }
+
+            }
+            const checkForImage = (imgObj) => {
+                try {
+                    if (imgObj) {
+                        return imgObj;
                     } else {
-                        return (imageName)
+                        return false
                     }
-                })
+                } catch (err) {
+                    return false
+                }
             }
-            const posterFile = imageDesignator(req.files.poster[0], videoFile, 'poster');
-            const iconFile = imageDesignator(req.files.icon[0], videoFile, 'icon');
-            //DB Entry
-            const dbInsert = (videoFile, posterFile, iconFile) => {
-                return (
-                            
+            const pofile = checkForImage(req.files.poster);
+            const icfile = checkForImage(req.files.icon);
 
-                        )
+            // const pofile = (req.files.icon[0]) ? req.files.poster[0] : false;
+            // const icfile = (req.files.icon[0]) ? req.files.icon[0] : false;
+            const videoFile = createVideoFile(req.files.video[0]);
+            const posterFile = imageDesignator(pofile[0], videoFile, 'poster');
+            const iconFile = imageDesignator(icfile[0], videoFile, 'icon');
+            //request digestion
+            const reqbody = (bodyItem = "default", defaultDescription) => {
+                if (bodyItem === "default") {
+                    return defaultDescription;
+                } else {
+                    return bodyItem;
+                }
             }
+            const title = reqbody(req.body.title, "default");
+            const description = reqbody(req.body.description, "default");
+            const tags = reqbody(req.body.tags, "default");
+            const category = reqbody(req.body.category, "default");
+            const creator = reqbody(req.body.creator, "Anonymous");
+            const defaultControls = reqbody(Boolean(req.body.controls), true);
+            const url = reqbody(req.body.url, "default");
+            const service = reqbody(req.body.service, "local");
+            const video_id = reqbody(req.body.video_id, "default id");
+            const src = videoFile;
+            const icon = iconFile;
+            const poster = posterFile;
+            const autoStart = reqbody(Boolean(req.body.autoStart), false);
+
+
+            //DB Entry
+
+            const dbInsert = (
+                title,
+                video_id,
+                src,
+                poster,
+                icon,
+                description,
+                defaultControls,
+                creator,
+                url,
+                service,
+                tags
+            ) => {
+                return (
+                    {
+                        "title": title,
+                        "video_id": video_id,
+                        "src": src,
+                        "poster": poster,
+                        "icon": icon,
+                        "description": description,
+                        "defaultControls": defaultControls,
+                        "creator": creator,
+                        "url": url,
+                        "service": service,
+                        "url": url,
+                        "upvotes": 0,
+                        "views": 0,
+                        "tags": tags,
+                        "comments": [],
+                        "autoStart": autoStart,
+
+                    })
+            }
+            const dbInsertObj = dbInsert(
+                title,
+                video_id,
+                src,
+                poster,
+                icon,
+                description,
+                defaultControls,
+                creator,
+                url,
+                service,
+                tags
+            );
+
+            console.log("dbInsert", dbInsertObj);
+            const stub = new stubModel({ ...dbInsertObj });
+            stub.save((err) => {
+                if (err) {
+                    console.log("ERROR", err);
+                } else {
+                    console.log("Stub saved");
+                }
+            });
             res.status(200).json({
                 message: "success",
             });
         } catch (err) {
-            console.log("ERROR", err)
-            res.status(500).json({ message: "oops something went wrong on route /simpupload", err });
+            console.log("ERROR || ERROR", err)
+            res.status(500).json({ message: "oops poop something went wrong on route /simpupload", status: "false", err });
         }
     })
 
@@ -390,12 +490,12 @@ module.exports = (params) => {
             //         "comments": [],
             //     }
             //     );
-            //     // stub.save((err) => {
-            //     //     if (err) {
-            //     //         console.log("ERROR", err);
-            //     //     } else {
-            //     //         console.log("Stub saved");
-            //     //     }
+            // stub.save((err) => {
+            //     if (err) {
+            //         console.log("ERROR", err);
+            //     } else {
+            //         console.log("Stub saved");
+            //     }
             //     // }
             //     // );
             // } catch (err) {
