@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { useState } from 'react'
 const axios = require('axios');
 // set up state rules
@@ -24,6 +25,7 @@ const VideoUploader = () => {
     const iconHandler = (event) => {
         setIsIconSelected(true);
         setSelectIconFile(event.target.files[0]);
+        preview_image(event);
     };
     const posterHandler = (event) => {
         setIsPosterSelected(true);
@@ -62,6 +64,15 @@ const VideoUploader = () => {
             console.log(error);
         });
     };
+    function preview_image(event) {
+        let reader = new FileReader();
+        reader.onload = function () {
+            let output = document.getElementById('output_image_icon');
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+        console.log(event.target.files[0]);
+    }
 
 
 
@@ -81,8 +92,23 @@ const VideoUploader = () => {
             <div><label>Video Author: </label><input className="video-input" autocomplete="off" type="text" id="video_author" /></div>
             <div><label>Video Tags: </label><textarea id="tags" name="tags" rows="4" cols="50" disabled value="Not currently in use"></textarea></div>
             <div><label>Video: </label><input className="video-input" type="file" id="video" name="video" accept="video/mp4" onChange={changeHandler} /></div>
-            <div><label>Icon: </label><input className="video-input" type="file" id="icon" name="icon" accept="image/*" onChange={iconHandler} /></div>
-            <div><label>Poster: </label><input className="video-input" type="file" id="poster" name="poster" accept="image/*" onChange={posterHandler} /></div>
+            <div className="image-uploader">
+                Drag and drop or click to upload an icon
+
+                <input
+                    className="video-input"
+                    type="file" id="icon"
+                    name="icon" accept="image/*"
+
+                    onChange={(event) => iconHandler(event)} />
+
+            </div>
+            <div className="image-uploader">
+
+                <input className="video-input" type="file" id="poster" name="poster" accept="image/*" onChange={posterHandler} /></div>
+            <div>
+                <label>Default Controls</label><input type="checkbox" id="default_controls" name="default_controls" value="true" />
+            </div>
             {isVideoSelected ? (
                 <div>
                     <div>Filename: {selectedVideoFile.type}</div>
@@ -94,6 +120,7 @@ const VideoUploader = () => {
             }
             {isIconSelected ? (
                 <div>
+                    <img id="output_image_icon" width="127px" height="127px" />
                     <div>Filename: {selectIconFile.name}</div>
                 </div>
 

@@ -39,8 +39,8 @@ const { db } = require('../../models/stubModel');
 const filepath_base = path.join(__dirname, "../", "../", "/media_library/videos/video_upload/")
 console.log("FILE PATH!!!", filepath_base);
 const filedest_base = path.join(__dirname, "../", "../", "/media_library/videos/");
-const filedest_video = filedest_base + "video_video_temp/"
-const filedest_images = filedest_base + "video_image_temp/"
+const filedest_video = filedest_base + "videos_available/"
+const filedest_images = filedest_base + "videos_images/"
 console.log("FILE_DEST VIDEOS", filedest_video);
 //this should be on middlewares but it does not work correctly. 
 const upload = multer({
@@ -185,7 +185,8 @@ module.exports = (params) => {
             return res.json(contentList);
         }
     });
-    router.post('/simpupload', cors(), upload, async (req, res, next) => {
+    //new upload route
+    router.post('/videoupload', cors(), upload, async (req, res, next) => {
         try {
             const fileNameBase = (imgName, imgFun) => {
                 return (`${imgName}_${imgFun}`)
@@ -266,7 +267,9 @@ module.exports = (params) => {
             const tags = reqbody(req.body.tags, "default");
             const category = reqbody(req.body.category, "default");
             const creator = reqbody(req.body.creator, "Anonymous");
-            const defaultControls = reqbody(Boolean(req.body.controls), true);
+            //need to fix this low priority
+            const defaultControls = true;
+
             const url = reqbody(req.body.url, "default");
             const service = reqbody(req.body.service, "local");
             const video_id = reqbody(req.body.video_id, "default id");
@@ -344,7 +347,7 @@ module.exports = (params) => {
         }
     })
 
-    router.post('/videoupload', cors(), upload, async (req, res) => {
+    router.post('/videoupload_old', cors(), upload, async (req, res) => {
         //this can be handled better. 
         //does this still need to be in try catch?
         try {
