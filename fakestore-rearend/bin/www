@@ -6,6 +6,13 @@ const http = require('http');
 const config = require('../server/config')[process.env.NODE_ENV || 'development'];
 const cors = require('cors');
 const app = require('../server/app')(config);
+const db = require('../server/lib/db');
+console.log("db", db);
+
+//WILL ADD TO .ENV FILE
+
+
+
 
 //console.log(`This is ENV: ${config}`)
 // Helper functions

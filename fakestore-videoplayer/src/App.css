@@ -107,8 +107,27 @@ figure video {
   margin: 0px auto;
   position: relative;
 }
-
-button {
+.icon-loader {
+  width: 127px;
+  height: 129px;
+}
+.image-uploader {
+  height: 127px;
+  width: 127px;
+  background-color: rgb(158, 187, 156);
+  border-radius: 3%;
+  align-items: center;
+  border: 1px solid black;
+  margin: 10px;
+}
+.video-input[type="file"] {
+  background-color: pink;
+  height: 127px;
+  width: 127px;
+  opacity: 0;
+  z-index: -1;
+}
+Then all button {
   padding: 16px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 16px;

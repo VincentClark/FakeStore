@@ -8,7 +8,10 @@ const upload = multer(
                 cb(null, filepath);
             }
         }),
-    });
+        fields: [{ name: 'video', maxCount: 1 }, { name: 'icon', maxCount: 1 }]
+    })
+//fields([{ name: 'video', maxCount: 1 }, { name: 'icon', maxCount: 1 }, { name: 'thumbnail', maxCount: 1 }])
+
 module.exports.upload = upload;
 
 module.exports.handleIcon = file => async (req, res, next) => {
