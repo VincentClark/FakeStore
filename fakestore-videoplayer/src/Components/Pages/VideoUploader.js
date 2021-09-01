@@ -1,12 +1,13 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { useState } from 'react'
 const axios = require('axios');
 // set up state rules
 
 const VideoUploader = () => {
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedVideoFile, setSelectedVideoFile] = useState(null);
     const [selectIconFile, setSelectIconFile] = useState(null);
     const [selectPosterFile, setSelectPosterFile] = useState(null);
-    const [isSelected, setIsSelected] = useState(false);
+    const [isVideoSelected, setIsVideoSelected] = useState(false);
     const [isIconSelected, setIsIconSelected] = useState(false);
     const [isPosterSelected, setIsPosterSelected] = useState(false);
 
@@ -17,56 +18,61 @@ const VideoUploader = () => {
     // const [videoAuthor, setVideoAuthor] = useState(null);
 
     const changeHandler = (event) => {
-        setSelectedFile(event.target.files[0]);
-        setIsSelected(true);
+        setSelectedVideoFile(event.target.files[0]);
+        setIsVideoSelected(true);
     };
 
     const iconHandler = (event) => {
         setIsIconSelected(true);
         setSelectIconFile(event.target.files[0]);
+        preview_image(event);
     };
     const posterHandler = (event) => {
         setIsPosterSelected(true);
         setSelectPosterFile(event.target.files[0]);
     };
+
+
+
     const handleSubmission = () => {
-        console.log("selectedFile", selectedFile);
+        console.log("selectedFile", selectedVideoFile);
 
         //    const config = {headers: { 'Content-Type': 'multipart/form-data'}};
         const formData = new FormData();
-        formData.append("video", selectedFile);
+        formData.append("video", selectedVideoFile);
+        formData.append("icon", selectIconFile);
+        formData.append("poster", selectPosterFile);
         console.log(formData.headers);
         //  console.log(formData);
         //  axios.post('http://localhost:8080/videos/videoupload', formData, config)
         console.log(axios.defaults.headers);
+
         axios(
             {
                 method: "post",
                 url: 'http://localhost:8080/videos/videoupload',
                 data: formData,
                 headers: {
-
+                    "content-type": "multipart/form-data"
                 }
             }
-        )
-
-        //delete formData.headers['Content-Type'];
-        // fetch('http://localhost:8080/videos/videoupload',
-        //     {
-        //         method: 'POST',
-        //         body: formData,
-        //         'Content-Type': 'multipart/form-data',
-        //         ...formData.getHeaders()
-
-        //     })
-        //     .then(response => response.json())
-        //     .then((result) => {
-        //         console.log('Success:', result);
-        //     })
-        //     .catch((error) => {
-        //         console.log('Error', error);
-        //     });
+        ).then((response) => {
+            console.log(response);
+            //  console.log(response.data);
+            //  console.log(response.data.videoId);
+        }).catch((error) => {
+            console.log(error);
+        });
     };
+    function preview_image(event) {
+        let reader = new FileReader();
+        reader.onload = function () {
+            let output = document.getElementById('output_image_icon');
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+        console.log(event.target.files[0]);
+    }
 
 
 
@@ -80,21 +86,61 @@ const VideoUploader = () => {
     return (
         <div>
             <h2>Video Uploader</h2>
-            <label>Video</label><input type="file" id="video" name="video" onChange={changeHandler} />
-            <label>Icon</label><input type="file" id="video_icon" name="video_icon" onChange={iconHandler} />
-            <label>Poster</label><input type="file" id="video_thumbnail" name="video_thumbnail" onChange={posterHandler} />
-            {isSelected ? (
+            <div><label>Video Title: </label><input className="video-input" autocomplete="off" type="text" id="video_title" /></div>
+            <div><label>Video Description: </label><input className="video-input" autocomplete="off" type="text" id="video_description" /></div>
+            <div><label>Video Category: </label><input className="video-input" autocomplete="off" type="text" id="video_category" /></div>
+            <div><label>Video Author: </label><input className="video-input" autocomplete="off" type="text" id="video_author" /></div>
+            <div><label>Video Tags: </label><textarea id="tags" name="tags" rows="4" cols="50" disabled value="Not currently in use"></textarea></div>
+            <div><label>Video: </label><input className="video-input" type="file" id="video" name="video" accept="video/mp4" onChange={changeHandler} /></div>
+            <div className="image-uploader">
+                Drag and drop or click to upload an icon
+
+                <input
+                    className="video-input"
+                    type="file" id="icon"
+                    name="icon" accept="image/*"
+
+                    onChange={(event) => iconHandler(event)} />
+
+            </div>
+            <div className="image-uploader">
+
+                <input className="video-input" type="file" id="poster" name="poster" accept="image/*" onChange={posterHandler} /></div>
+            <div>
+                <label>Default Controls</label><input type="checkbox" id="default_controls" name="default_controls" value="true" />
+            </div>
+            {isVideoSelected ? (
                 <div>
-                    <p>Filename: {selectIconFile.name}</p>
+                    <div>Filename: {selectedVideoFile.type}</div>
 
                 </div>
             ) : (
-                <p>Select a file to show details</p>
-            )}
+                <div>Select a file to show details</div>
+            )
+            }
+            {isIconSelected ? (
+                <div>
+                    <img id="output_image_icon" width="127px" height="127px" />
+                    <div>Filename: {selectIconFile.name}</div>
+                </div>
+
+            ) : (
+                <div>Select an icon to show details</div>
+            )
+            }
             <div>
-                <button onClick={handleSubmission}>Submit</button>
+                {isPosterSelected ? (
+                    <div>Filename: {selectPosterFile.name}</div>
+
+                ) : (
+                    <div>Select a poster to show details</div>
+                )
+                }
             </div>
+
+            <button onClick={handleSubmission}>Submit</button>
         </div>
+
     )
 
 }

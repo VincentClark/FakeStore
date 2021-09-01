@@ -95,7 +95,7 @@ const FS5VideoPlayer = () => {
               return (
                 <div key={videos.id} className="grid_item">
                   <a href={`#${index}`} onClick={() => playVideo(index)}>
-                    <img src={`${path()}/videoimage/${videos.src}_icon.png`} alt={videos.title} className="video_icon" />
+                    <img src={`${path()}/videoimage/${videos.src}_icon.png`} width="127" height="127" alt={videos.title} className="video_icon" />
                   </a>
                 </div>
               )
