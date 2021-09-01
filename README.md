@@ -33,15 +33,21 @@ Updated: 8/2/2021
 - Some adjustments to the icon service. (renamed)
 - Fixed CSS issue. 
 
+### Version 1.2
+- Newest stable version. Close to an MVP. 
 
-Updated: 8/10/2021
+
+Updated: 8/31/2021
 
 ## Branches
-08/10/2021 
-This will change soon. Testing workflows. 
-- main
-    - Testing
-        - vtc-dev (most current branch)
+8/31/2021 puting eveything back to main.
+
+# To Do
+1. clean up the ReadMe files so each README will pertain just to that folder. 
+1. Document recent changes
+    - Added Upload Support
+    - Added MongoDB Local
+- Move to cload MongDB. 
 
 ## To Build Front End
 
