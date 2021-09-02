@@ -187,6 +187,8 @@ module.exports = (params) => {
     });
     //new upload route
     router.post('/videoupload', cors(), upload, async (req, res, next) => {
+        // const success = await videos.uploadVideo(req, res);
+        //console.log("SUCCESS", success);
         try {
             const fileNameBase = (imgName, imgFun) => {
                 return (`${imgName}_${imgFun}`)
