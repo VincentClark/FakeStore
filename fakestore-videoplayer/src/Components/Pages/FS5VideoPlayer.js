@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import HTML5Video from "../Parts/HTML5Video";
 
+function isVideoChecked() {
+
+}
 
 const FS5VideoPlayer = () => {
   //Generate the playList
@@ -25,6 +28,19 @@ const FS5VideoPlayer = () => {
       return `${currentprotocal}//${currenthost}${currentport}/videos/`;
     }
   };
+  const isNowPlaying = (nplaying) => {
+    console.log("nplaying", nplaying.length);
+    if (nplaying.length < 1) {
+      return (<div>Please Select a Video</div>)
+    } else {
+
+      return (<HTML5Video
+        videoInfo={nowPlaying}
+      />
+      )
+    }
+  };
+
 
 
   const urli = () => {
@@ -60,14 +76,7 @@ const FS5VideoPlayer = () => {
   else {
     console.log(items.src);
     //console.log("loading-nowPlaying", nowPlaying);
-    if (nowPlaying === "") {
-      SetNowPlaying(items[0]);
-      console.log("Initial Loadd")
-    }
-    else {
-      // console.log("all good")
 
-    }
   }
 
   function playVideo(videoObj) {
@@ -83,9 +92,7 @@ const FS5VideoPlayer = () => {
         <a href="/videoplayer/VideoUploader">Upload Video</a>
       </div>
       <div className="container-video">
-        <HTML5Video
-          videoInfo={nowPlaying}
-        />
+        {isNowPlaying(nowPlaying)}
         <div className="container-thumbnails">
           {
             // Map Video List 
@@ -94,7 +101,7 @@ const FS5VideoPlayer = () => {
             items.map((videos, index) => {
               return (
                 <div key={videos.title} className="thumb-item">
-                  <a href={`#`} onClick={() => playVideo(index)}>
+                  <a href="#" onClick={() => playVideo(index)}>
                     <img src={`${path()}/videoimage/${videos.src}_icon.png`} alt={videos.title} className="thumb-image" />
                   </a>
                 </div>
