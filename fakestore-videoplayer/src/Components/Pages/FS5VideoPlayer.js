@@ -78,24 +78,24 @@ const FS5VideoPlayer = () => {
 
   }
   return (
-    <>
+    <div className="container">
       <div>
         <a href="/videoplayer/VideoUploader">Upload Video</a>
       </div>
-      <div className="">
+      <div className="container-video">
         <HTML5Video
           videoInfo={nowPlaying}
         />
-        <div className="grid-container_vc">
+        <div className="container-thumbnails">
           {
             // Map Video List 
             //
 
             items.map((videos, index) => {
               return (
-                <div key={videos.id} className="grid_item">
-                  <a href={`#${index}`} onClick={() => playVideo(index)}>
-                    <img src={`${path()}/videoimage/${videos.src}_icon.png`} width="127" height="127" alt={videos.title} className="video_icon" />
+                <div key={videos.title} className="thumb-item">
+                  <a href={`#`} onClick={() => playVideo(index)}>
+                    <img src={`${path()}/videoimage/${videos.src}_icon.png`} alt={videos.title} className="thumb-image" />
                   </a>
                 </div>
               )
@@ -105,7 +105,7 @@ const FS5VideoPlayer = () => {
 
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

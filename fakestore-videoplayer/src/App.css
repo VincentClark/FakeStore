@@ -107,27 +107,38 @@ figure video {
   margin: 0px auto;
   position: relative;
 }
+.media-flex-container {
+  display: flex;
+}
 .icon-loader {
-  width: 127px;
-  height: 129px;
+  width: 160px;
+  height: 90px;
 }
 .image-uploader {
-  height: 127px;
-  width: 127px;
-  background-color: rgb(158, 187, 156);
-  border-radius: 3%;
+  position: relative;
+  height: 90px;
+  width: 160px;
+
   align-items: center;
-  border: 1px solid black;
+
   margin: 10px;
+}
+#icon {
+  width: 90px;
+  height: 90px;
 }
 .video-input[type="file"] {
   background-color: pink;
   height: 127px;
   width: 127px;
+  border-radius: 3%;
   opacity: 0;
-  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
-Then all button {
+button {
   padding: 16px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 16px;
@@ -248,16 +259,23 @@ footer {
 menustyles 8.5.2021
 */
 /* Grid */
-.grid-container_vc {
+.container-thumbnails {
   display: grid;
-  grid-gap: 40px 60px;
-  grid-template-columns: auto auto auto auto;
-  padding: 5px;
-  width: 720px;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-gap: 1px 4px;
+  width: 100%;
 }
-
-.grid-item {
-  padding: 5px;
+.thumb-image {
+  width: 100%;
+  height: auto;
+}
+.thumb-item {
+  display: grid;
+  /*flex-direction: column;*/
+  margin-right: 10px;
+  padding-top: 5px;
+  height: 100px;
+  width: 100px;
   background-color: antiquewhite;
   width: 100px;
 }
@@ -266,10 +284,14 @@ menustyles 8.5.2021
   margin: 0px auto;
   padding: 0px;
   position: relative;
+  border: 1px solid rgb(255, 230, 0);
+}
+.container {
+  margin: 0px auto;
 }
 
 .container_xc {
-  width: 800px;
+  max-width: 720px;
   margin: 5px auto;
   position: relative;
 }

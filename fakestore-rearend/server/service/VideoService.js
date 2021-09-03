@@ -4,7 +4,9 @@ const url = require('url')
 const path = require('path');
 const http = require("http");
 const querystring = require('querystring');
-
+const multer = require('multer');
+const sharp = require('sharp');
+const stubModel = require('../models/stubModel');
 /**
  * VIDEO SERVICE
  * fs and util are for testing purposes. Do not leave in if still needed. 
@@ -16,6 +18,7 @@ const {
     createWriteStream
 
 } = require('fs');
+const { EWOULDBLOCK } = require('constants');
 
 class VideoService {
 
@@ -150,11 +153,28 @@ class VideoService {
 
     }
     async respondToUpload(req, res) {
+
+        // const upload = multer({
+        //     dest: filepath_base,
+        //     storage: multer.diskStorage({
+        //         destination: function (req, file, cb) {
+        //             cb(null, filepath_base);
+        //         }
+        //     }),
+
+        // }).fields([
+        //     { name: 'video', maxCount: 1 },
+        //     { name: 'icon', maxCount: 1 },
+        //     { name: 'poster', maxCount: 1 }
+        // ]);
+
         //should be linked to through the routes
-        const filedest_base = path.join(__dirname, "../", "../", "/media_library/videos/");
+
+        const filedest_base = path.join(__dirname, "../", "/media_library/videos/");
         const filedest_video = filedest_base + "videos_available/"
         const filedest_images = filedest_base + "videos_images/"
         try {
+
             const fileNameBase = (imgName, imgFun) => {
                 return (`${imgName}_${imgFun}`)
             }
@@ -162,7 +182,7 @@ class VideoService {
                 const videoObject = videoFile;
                 const video_fileName = videoFile.originalname;
                 const file_name_base = videoFile.originalname.split('.')[0];
-                const video_filePath = filepath_base + video_fileName;
+                const video_filePath = this.filepath_base + video_fileName;
                 const target_video_file = videoFile.path;
                 fs.rename(target_video_file, `${filedest_video}${video_fileName}`, (err) => {
                     if (err) {
@@ -175,7 +195,8 @@ class VideoService {
                 return file_name_base;
             };
             console.log("YOU ARE HERE")
-            const imageDesignator = (imgObj = false, imgBase, imgFun) => {
+            //should be moved above the try block
+            const imageDesignator = (imgObj = false, imgBase, imgFun, imageSize = []) => {
                 console.log("NEXT");
                 if (imgObj) {
                     console.log("IMG OBJ", imgObj);
@@ -185,17 +206,37 @@ class VideoService {
                     const imagePath = `${filedest_images}${imageName}`
                     const imageFile = imageObject.path;
 
-                    fs.rename(imageFile, imagePath, (err) => {
-                        if (err) {
-                            console.log("ERROR ERROR", err)
-                            //   return (`default_${imgFun}.png`)
-                            imageName = `default_${imgFun}.png`
+                    const imageResize = sharp(imageFile)
+                        .resize(imageSize[0], imageSize[1])
+                        .toFile(imagePath, (err, info) => {
+                            if (err) {
+                                console.log("ERROR RESIZING", err);
+                                return false;
+                            } else {
+                                console.log("image resize successful {0}");
+                                console.log(imageSize);
+                                fs.unlinkSync(imageFile);
+                                return true;
+                            }
+                        });
 
-                        } else {
-                            console.log("imageName", imageName)
-                            //   return (imageName)
-                        }
-                    })
+
+                    //inserting file resize here
+
+                    //console.log("imageResize", imageResize);
+                    //end of file resize
+                    //change this to delete if this works.
+                    // fs.rename(imageFile, imagePath, (err) => {
+                    //     if (err) {
+                    //         console.log("ERROR ERROR", err)
+                    //         //   return (`default_${imgFun}.png`)
+                    //         imageName = `default_${imgFun}.png`
+
+                    //     } else {
+                    //         console.log("imageName", imageName)
+                    //         //   return (imageName)
+                    //     }
+                    // })
                     return imageName;
                 } else {
                     return (`default_${imgFun}.png`)
@@ -213,15 +254,37 @@ class VideoService {
                     return false
                 }
             }
+
             const pofile = checkForImage(req.files.poster);
             const icfile = checkForImage(req.files.icon);
 
             // const pofile = (req.files.icon[0]) ? req.files.poster[0] : false;
             // const icfile = (req.files.icon[0]) ? req.files.icon[0] : false;
             const videoFile = createVideoFile(req.files.video[0]);
-            const posterFile = imageDesignator(pofile[0], videoFile, 'poster');
-            const iconFile = imageDesignator(icfile[0], videoFile, 'icon');
-            //request digestion
+            const posterFile = imageDesignator(pofile[0], videoFile, 'poster', [720, 480]);
+            const iconFile = imageDesignator(icfile[0], videoFile, 'icon', [127, 127]);
+            const fullPosterFile = `${filedest_images}${posterFile}`
+            console.log("fullPosterFile", fullPosterFile);
+
+            // const resizeFile = (fullImageFile, imageFile) => {
+
+            //     const imageResize = sharp(fullImageFile)
+            //         .resize(720, 480)
+            //         .toFile(`${filedest_base}/videos_images/rs${imageFile}`, (err, info) => {
+            //             if (err) {
+            //                 console.log("ERROR RESIZING", err);
+            //                 return false;
+            //             } else {
+            //                 console.log("image resize successful {0}");
+            //                 return true;
+            //             }
+            //         });
+            // }
+            // if (pofile) {
+            //     // const resizePosterFile = resizeFile(fullPosterFile, posterFile);
+
+            // }
+
             const reqbody = (bodyItem = "default", defaultDescription) => {
                 if (bodyItem === "default") {
                     return defaultDescription;
@@ -229,13 +292,22 @@ class VideoService {
                     return bodyItem;
                 }
             }
+            const reqControls = (controlItem = "checked", defaultControls) => {
+                if (controlItem === "checked") {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
             const title = reqbody(req.body.title, "default");
             const description = reqbody(req.body.description, "default");
             const tags = reqbody(req.body.tags, "default");
             const category = reqbody(req.body.category, "default");
             const creator = reqbody(req.body.creator, "Anonymous");
             //need to fix this low priority
-            const defaultControls = true;
+            const defaultControls = reqControls(req.body.controls);
 
             const url = reqbody(req.body.url, "default");
             const service = reqbody(req.body.service, "local");
@@ -305,12 +377,13 @@ class VideoService {
                     console.log("Stub saved");
                 }
             });
-            res.status(200).json({
-                message: "success",
-            });
+            return (true);
+
         } catch (err) {
-            console.log("ERROR || ERROR", err)
-            res.status(500).json({ message: "oops poop something went wrong on route /simpupload", status: "false", err });
+            console.log("ERROR || ERRORService no response", err)
+            return (`ERROR ${err}`)
+
+            //res.status(500).json({ message: "oops BAD poop something went wrong on route /simpupload", status: "false", err });
         }
     }
 

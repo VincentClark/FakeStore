@@ -14,8 +14,9 @@ const HTML5Video = ({ videoInfo }) => {
     }
   }
   let url = `${urlPath()}/videos/videofiles?videosrc=${videoInfo.src}`
+  let poster = `${urlPath()}/videos/videoimage/${videoInfo.poster}`
   const videoRef = useRef(url);
-
+  console.log("poster", poster);
   const previousUrl = useRef(url);
   useEffect(() => {
     if (previousUrl.current === url) {
@@ -41,19 +42,14 @@ const HTML5Video = ({ videoInfo }) => {
   //`${urlPath()}/videos/videofiles?videosrc=${videoInfo.src}}
   return (
     <div className="container">
-
-      <h2>{videoInfo.title}</h2>
-      <video width="720" controls={videoInfo.defaultControls} ref={videoRef}>
+      <div className="container-video-title">{videoInfo.title}</div>
+      <video width="720" className="display-video" controls={videoInfo.defaultControls} poster={poster} ref={videoRef}>
         <source src={url} type="video/mp4" />
-
       </video>
-      <div className="container-tbd">
-
+      <div className="container-video-description">
         {videoInfo.description}
-
-
       </div>
-      <div className="container-tbd">
+      <div className="container-upvotes">
         Up Votes: {videoInfo.upvotes}
       </div>
     </div>
