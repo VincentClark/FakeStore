@@ -38,9 +38,34 @@ class VideoService {
         return "simple:true";
     }
 
-    async directoryCheck() {
-        const currentDirectory = await this.readdir(this.filepath)
-        return (currentDirectory);
+    async directoryCheck(dir) {
+
+        const filedest_base = path.join(__dirname, "../", "/media_library/videos/", dir);
+        const currentDirectory = this.readdir(filedest_base);
+        const sendDirectory = currentDirectory.toString().split(",");
+        const combineDirectory = [];
+        sendDirectory.forEach(element => {
+            console.log(element)
+            combineDirectory.push(`${filedest_base}${dir}/${element}`)
+        })
+        return (combineDirectory);
+    }
+
+    async deleteVideoFiles() {
+        const video_images = await this.directoryCheck('/videos_images')
+            .then(() => {
+                const videos_available = this.directoryCheck('/videos_available');
+            })
+            .then(() => {
+                const video_imagesAr = video_images.toString().split(",");
+                const videos_availableAr = videos_available.toString().split(",");
+                const deleteVideos = video_imagesAr.concat(videos_availableAr);
+                console.log("deleteVideos", deleteVideos);
+            })
+            .catch(err => {
+                console.log("ERROR IN SERVICE deletVideoFiles", err);
+            })
+        return deleteVideos;
     }
 
     async respondWithVideo(req, res) {

@@ -10,7 +10,6 @@ const VideoUploader = () => {
     const [selectedVideoFile, setSelectedVideoFile] = useState(null);
     const [selectIconFile, setSelectIconFile] = useState(null);
     const [selectPosterFile, setSelectPosterFile] = useState(null);
-    const [isVideoSelected, setIsVideoSelected] = useState(false);
     const [isIconSelected, setIsIconSelected] = useState(false);
     const [isPosterSelected, setIsPosterSelected] = useState(false);
     const [hasBeenUploaded, setHasBeenUploaded] = useState(false);
@@ -20,10 +19,9 @@ const VideoUploader = () => {
     //const [videoTags, setVideoTags] = useState(null);
     //const [videoCategory, setVideoCategory] = useState(null);
     // const [videoAuthor, setVideoAuthor] = useState(null);
-
+    console.log(isIconSelected, isPosterSelected)
     const changeHandler = (event) => {
         setSelectedVideoFile(event.target.files[0]);
-        setIsVideoSelected(true);
         preview_video(event);
     };
 
@@ -122,7 +120,7 @@ const VideoUploader = () => {
         <div>
             <h2>Video Uploader</h2>
             <div><label>Video Title: </label><input className="video-input" autoComplete="off" type="text" id="video_title" /></div>
-            <div><label>Video Description: </label><input className="video-input" autoComplete="off" type="text" id="video_description" /></div>
+            <div><label>Video Description: </label><textarea className="video-input" autoComplete="off" type="text" id="video_description"></textarea></div>
             <div><label>Video Category: </label><input className="video-input" autoComplete="off" type="text" id="video_category" /></div>
             <div><label>Video Author: </label><input className="video-input" autoComplete="off" type="text" id="video_author" /></div>
             <div><label>Video Tags: </label><textarea id="tags" name="tags" rows="4" cols="50" disabled value="Not currently in use"></textarea></div>

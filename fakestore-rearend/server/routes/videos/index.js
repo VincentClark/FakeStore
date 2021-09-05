@@ -80,11 +80,21 @@ module.exports = (params) => {
     //used for testing
     router.get('/dir', async (req, res) => {
         try {
-            const directoryCheck = await videos.directoryCheck()
-            return res.send(directoryCheck);
+            //const allFiles = [];
+            const directoryCheck = await videos.directoryCheck('/videos_available');
+            const imageCheck = await videos.directoryCheck('/videos_images');
+            allFiles = directoryCheck.concat(imageCheck);
+            // const arDcheck = directoryCheck.split(',');
+            // const arIcheck = imageCheck.split(',');
+            // //combine both arrays
+            // const allFiles = arDcheck.concat(arIcheck);
+
+            //allFiles.push(directoryCheck);
+            //allFiles.push(imageCheck);
+            return res.send(allFiles)
         } catch (err) {
-            console.log("ERROR", err)
-            return res.send("POO")
+            console.log("ERROR", err);
+            return res.send("POO");
         }
 
     });
@@ -164,6 +174,18 @@ module.exports = (params) => {
 
     //DB Connection Route
     // will adjust to admin functionality. 
+    router.get('/admindelete', async (req, res) => {
+        try {
+            deleteList = videos.deleteVideoFiles();
+            console.log("DELETE LIST", deleteList);
+            return res.send(deleteList);
+
+        } catch (err) {
+            console.log("ERROR", err)
+            return res.send("POO")
+        }
+
+    })
     router.get('/videostub', cors(), async (req, res) => {
         try {
             const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
