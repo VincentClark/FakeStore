@@ -54,11 +54,11 @@ class VideoService {
     async deleteVideoFiles() {
         const video_images = await this.directoryCheck('/videos_images')
             .then(() => {
-                const videos_available = this.directoryCheck('/videos_available');
+                const videos_available = await this.directoryCheck('/videos_available');
             })
             .then(() => {
-                const video_imagesAr = video_images.toString().split(",");
-                const videos_availableAr = videos_available.toString().split(",");
+                const video_imagesAr = video_images
+                const videos_availableAr = videos_available
                 const deleteVideos = video_imagesAr.concat(videos_availableAr);
                 console.log("deleteVideos", deleteVideos);
             })
