@@ -2,10 +2,7 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import { useState, useEffect } from "react";
 import HTML5Video from "../Parts/HTML5Video";
-
-function isVideoChecked() {
-
-}
+//import { Test } from '../../Functions/BaseFunctions'
 
 const FS5VideoPlayer = () => {
   //Generate the playList
@@ -101,6 +98,7 @@ const FS5VideoPlayer = () => {
             items.map((videos, index) => {
               return (
                 <div key={videos.title} className="thumb-item">
+
                   <a href="#" onClick={() => playVideo(index)}>
                     <img src={`${path()}/videoimage/${videos.src}_icon.png`} alt={videos.title} className="thumb-image" />
                   </a>

@@ -105,19 +105,6 @@ module.exports = (params) => {
         return res.json(contentList);
     })
 
-
-    router.get("/filelist", async (req, res) => {
-
-    })
-
-    router.get('/videofiles_old', async (req, res) => {
-        const qs = req.query.videosrc;
-        console.log("QS: " + qs)
-        const video_simple = videos.respondWithVideo(req, res)
-        console.log("video files")
-        return true;
-
-    });
     router.get('/videofiles', async (req, res) => {
         const qs = req.query.videosrc;
         const videoResponse = await videos.returnWithVideo(qs);
@@ -174,6 +161,18 @@ module.exports = (params) => {
 
     //DB Connection Route
     // will adjust to admin functionality. 
+    router.get('/admindel', async (req, res) => {
+        try {
+            const deleteList = await videos.adminCleanUp();
+            console.log("deleteList", deleteList)
+            return res.json(deleteList);
+
+        } catch (err) {
+            console.log("ERROR in Admin Delete:", err)
+            return res.status(500).json({ message: "POOP admin delete didn't owrk" })
+        }
+
+    })
     router.get('/admindelete', async (req, res) => {
         try {
             console.log("admindelte")

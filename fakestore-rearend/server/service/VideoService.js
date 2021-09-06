@@ -7,6 +7,7 @@ const querystring = require('querystring');
 const multer = require('multer');
 const sharp = require('sharp');
 const stubModel = require('../models/stubModel');
+const { mongoClient, MongoClient } = require('mongodb');
 
 /**
  * VIDEO SERVICE
@@ -118,6 +119,48 @@ class VideoService {
         console.log("returnCombineDirectories", returnCombineDirectories);
     }
     //return "combineDirectories";
+    // const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
+    // const db = client.db('fsvideodatabase');
+
+    // const videoStubs = await db.collection('fsvideodev').find({}).toArray();
+    async adminCleanUp() {
+        try {
+            console.log("ADMIN CLEANUP CHECKED!")
+            const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
+            const db = client.db('fsvideodatabase');
+            const filedest_base = path.join(__dirname, "../", "/media_library/videos/");
+            const video_images = path.join(__dirname, "../", "/media_library/videos/videos_images");
+            const video_available = path.join(__dirname, "../", "/media_library/videos/videos_available");
+            const imagesDirectory = await this.readdir(video_images);
+            const availableDirectory = await this.readdir(video_available);
+            const correctImageDirectory = [];
+            const correctAvailableDirectory = [];
+            imagesDirectory.forEach(element => {
+                correctImageDirectory.push(`${video_images}/${element}`)
+            })
+            availableDirectory.forEach(element => {
+                correctAvailableDirectory.push(`${video_available}/${element}`)
+            })
+            const combineDirectories = [...correctImageDirectory, ...correctAvailableDirectory];
+            console.log("imagesDirectory", combineDirectories);
+            //delete all files in combineDirectories
+            combineDirectories.forEach(element => {
+                fs.unlink(element, (err) => {
+                    if (err) throw err;
+                    console.log('successfully deleted ' + element);
+                });
+            })
+            //delete refference in mongo
+            const videoStubs = await db.collection('fsvideodev').deleteMany({});
+        } catch (err) {
+            console.log("error", err)
+            return { message: err };
+        }
+        return { message: "videos delete and db cleared" }
+
+    }
+
+
 
 
     async deleteVideoFiles() {

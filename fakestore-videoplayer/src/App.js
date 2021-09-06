@@ -1,17 +1,17 @@
 import Header from "./Components/Header";
 import HomePage from "./Components/Pages/HomePage";
 import NavBar from "./Components/NavBar"
-import ReactPlayer from "./Components/Pages/ReactPlayer"
-import VideoReact from "./Components/Pages/VideoReact"
+//import ReactPlayer from "./Components/Pages/ReactPlayer"
+//import VideoReact from "./Components/Pages/VideoReact"
 import NotFound from "./Components/Pages/NotFound"
-import PlyrReact from "./Components/Pages/PlyrReact";
+//import PlyrReact from "./Components/Pages/PlyrReact";
 import Footer from "./Components/Parts/Footer";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import FS5VideoPlayer from "./Components/Pages/FS5VideoPlayer";
 import Video_Uploader from "./Components/Pages/VideoUploader";
 import VideoUploaderConfirmation from "./Components/Pages/VideoUploaderConfirmation";
-import Video_Uploaderog from "./Components/Pages/VideoUploader_og";
+import Admin from "./Components/Pages/Admin";
 
 
 function App() {
@@ -22,24 +22,25 @@ function App() {
       ref: "/videoplayer",
       component: HomePage,
     },
+    // {
+    //   id: 2,
+    //   title: "Video-React",
+    //   ref: "/videoplayer/videoreact",
+    //   component: VideoReact,
+    // },
+    // {
+    //   id: 3,
+    //   title: "React-Player",
+    //   ref: "/videoplayer/reactplayer",
+    //   component: ReactPlayer
+    // },
+    // {
+    //   id: 4,
+    //   title: "PlyrReact",
+    //   ref: "/videoplayer/plyrreact",
+    //   component: PlyrReact,
+    // }, 
     {
-      id: 2,
-      title: "Video-React",
-      ref: "/videoplayer/videoreact",
-      component: VideoReact,
-    },
-    {
-      id: 3,
-      title: "React-Player",
-      ref: "/videoplayer/reactplayer",
-      component: ReactPlayer
-    },
-    {
-      id: 4,
-      title: "PlyrReact",
-      ref: "/videoplayer/plyrreact",
-      component: PlyrReact,
-    }, {
       id: 5,
       title: "FSVideoPlayer",
       ref: "/videoplayer/fsvideoplayer",
@@ -53,9 +54,9 @@ function App() {
     },
     {
       id: 7,
-      title: "VideoUploaderOG",
-      ref: "/videoplayer/videouploaderog",
-      component: Video_Uploaderog,
+      title: "Admin",
+      ref: "/videoplayer/admin",
+      component: Admin
     },
 
 
