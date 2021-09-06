@@ -7,6 +7,7 @@ const querystring = require('querystring');
 const multer = require('multer');
 const sharp = require('sharp');
 const stubModel = require('../models/stubModel');
+
 /**
  * VIDEO SERVICE
  * fs and util are for testing purposes. Do not leave in if still needed. 
@@ -50,22 +51,92 @@ class VideoService {
         })
         return (combineDirectory);
     }
+    async adminDelete() {
+        return { message: true }
+    }
+
+    async adminAddDelete() {
+        console.log("ADMIN DELETE CHECKED!")
+        const combineDirectories = () => {
+            const filedest_base = path.join(__dirname, "../", "/media_library/videos/");
+            const available_videos = this.readdir(filedest_base + "/videos_available");
+            const available_videosAr = available_videos.toString().split(",");
+            const delList = [];
+            available_videosAr.forEach(element => {
+                delList.push(`${filedest_base}/videos_available/${element}`)
+            })
+
+            return (available_videosAr);
+            // const filedest_base = () => path.join(__dirname, "../", "/media_library/videos/").
+            //     then((filedest_base) => {
+            //         console.log("step1", filedest_base)
+            //     })
+            //     .then((filedest_base) => {
+            //         console.log("step2", filedest_base)
+            //         const available_videos = this.readdir(`${filedest_base}videos_available/`)
+            //     })
+            //     .then((available_videos) => {
+            //         console.log("step3", available_videos)
+            //         const combineDirectory = [];
+            //         available_videos.forEach(element => {
+            //             console.log(element)
+            //             combineDirectory.push(`${filedest_base}videos_available/${element}`)
+            //         })
+            //     })
+            //     .then((combineDirectory) => {
+            //         console.log("step4", combineDirectory)
+            //         const available_videosAr = available_videos.toString().split(",");
+            //     })
+            //     .then((available_videosAr) => {
+            //         console.log("step5", available_videosAr)
+            //         const combineDirectory = [];
+            //         available_videosAr.forEach(element => {
+            //             console.log(element)
+            //             combineDirectory.push(`${filedest_base}videos_available/${element}`)
+            //         })
+            //             .then((combineDirectory) => {
+            //                 console.log("step6", combineDirectory)
+            //                 const videos_images = this.readdir(`${filedest_base}videos_images/`);
+            //             })
+            //             .then((videos_images) => {
+            //                 console.log("step7", videos_images)
+            //                 const videos_imagesAr = videos_images.toString().split(",");
+            //                 const combineDirectory = [...available_videosAr, ...videos_imagesAr];
+            //             })
+            //             .then((combineDirectory) => {
+            //                 console.log("step8", combineDirectory)
+            //                 return combineDirectory;
+            //             })
+            //             .catch(err => {
+            //                 console.log("END OF THEN", err)
+            //             }
+            //             )
+            //     })
+
+        }
+        const returnCombineDirectories = combineDirectories()
+        console.log("returnCombineDirectories", returnCombineDirectories);
+    }
+    //return "combineDirectories";
+
 
     async deleteVideoFiles() {
-        const video_images = await this.directoryCheck('/videos_images')
+        const video_images = this.directoryCheck('/videos_images')
             .then(() => {
-                const videos_available = await this.directoryCheck('/videos_available');
+                console.log("video_images", video_images);
+                const videos_available = this.directoryCheck('/videos_available');
             })
             .then(() => {
                 const video_imagesAr = video_images
                 const videos_availableAr = videos_available
                 const deleteVideos = video_imagesAr.concat(videos_availableAr);
                 console.log("deleteVideos", deleteVideos);
+                return deleteVideos;
             })
             .catch(err => {
                 console.log("ERROR IN SERVICE deletVideoFiles", err);
             })
-        return deleteVideos;
+
     }
 
     async respondWithVideo(req, res) {

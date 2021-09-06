@@ -176,13 +176,30 @@ module.exports = (params) => {
     // will adjust to admin functionality. 
     router.get('/admindelete', async (req, res) => {
         try {
-            deleteList = videos.deleteVideoFiles();
-            console.log("DELETE LIST", deleteList);
-            return res.send(deleteList);
+            console.log("admindelte")
+            const deleteList = videos.adminAddDelete()
+                .then((deleteList) => {
+                    console.log("DELETE LIST :", deleteList)
+                })
+                .then((deleteList) => {
+                    return res.send({ deleteList })
+                })
+            //res.status(200).json({ message: "Deleting" });
+            //const deleteList = videos.directoryCheck('/videos_available')
+            // const deleteList = new Promise((resolve, reject) => {
+            //     console.log("DELETE LIST Promise")
+            //     resolve(videos.adminDelete())
+            //     //const deleteList = videos.directoryCheck('/videos_available')
+            //     //resolve(deleteList)
+            //     reject(err)
+            // }).then(() => {
+            //     console.log("DELETE LIST", deleteList);
+            //     return res.status(200).json({ response: deleteList });
+            // });
 
         } catch (err) {
-            console.log("ERROR", err)
-            return res.send("POO")
+            console.log("ERROR in Admin Delete:", err)
+            return res.status(500).json({ message: "POOP admin delete didn't owrk" })
         }
 
     })
