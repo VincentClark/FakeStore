@@ -16,6 +16,7 @@ const VideoUploader = () => {
     const [hasBeenUploaded, setHasBeenUploaded] = useState(false);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [creator, setCreator] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
 
@@ -43,6 +44,12 @@ const VideoUploader = () => {
     };
     const titleHandler = (event) => {
         setTitle(event.target.value);
+    };
+    const descriptionHandler = (event) => {
+        setDescription(event.target.value);
+    };
+    const creatorHandler = (event) => {
+        setCreator(event.target.value);
     };
 
 
@@ -131,9 +138,9 @@ const VideoUploader = () => {
         <div>
             <h2>Video Uploader</h2>
             <div><label>Video Title: </label><input className="video-input" autoComplete="off" type="text" id="title" name="title" onChange={(event) => titleHandler(event)} /></div>
-            <div><label>Video Description: </label><textarea className="video-input" autoComplete="off" type="text" id="description" name="description"></textarea></div>
+            <div><label>Video Description: </label><textarea className="video-input" autoComplete="off" type="text" id="description" name="description" onChange={(event) => descriptionHandler(event)}></textarea></div>
             <div><label>Video Category: </label><input className="video-input" autoComplete="off" type="text" id="video_category" name="category" /></div>
-            <div><label>Video Author: </label><input className="video-input" autoComplete="off" type="text" id="creator" name="creator" /></div>
+            <div><label>Video Author: </label><input className="video-input" autoComplete="off" type="text" id="creator" name="creator" onChange={(event) => creatorHandler(event)} /></div>
             <div><label>Video Tags: </label><textarea id="tags" name="tags" rows="4" cols="50" disabled value="Not currently in use"></textarea></div>
             <div className="media-flex-container">
                 <div className="image-uploader">
