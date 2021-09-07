@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { useState, useEffect } from 'react'
+import { urlPath } from '../../Functions/BaseFunctions'
 //import uploadicon from '../../../public/assets/images/uploadicon.png';
 //import uploadposter from '../../../public/assets/images/uploadpster.png';
 
@@ -13,6 +14,11 @@ const VideoUploader = () => {
     const [isIconSelected, setIsIconSelected] = useState(false);
     const [isPosterSelected, setIsPosterSelected] = useState(false);
     const [hasBeenUploaded, setHasBeenUploaded] = useState(false);
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+
 
     // const [videoDescription, setVideoDescription] = useState(null);
     // const [videoTitle, setVideoTitle] = useState(null);
@@ -35,6 +41,9 @@ const VideoUploader = () => {
         setSelectPosterFile(event.target.files[0]);
         preview_poster(event);
     };
+    const titleHandler = (event) => {
+        setTitle(event.target.value);
+    };
 
 
 
@@ -43,18 +52,20 @@ const VideoUploader = () => {
 
         //    const config = {headers: { 'Content-Type': 'multipart/form-data'}};
         const formData = new FormData();
+
         formData.append("video", selectedVideoFile);
         formData.append("icon", selectIconFile);
         formData.append("poster", selectPosterFile);
+        formData.append("title", title);
         console.log(formData.headers);
         //  console.log(formData);
         //  axios.post('http://localhost:8080/videos/videoupload', formData, config)
         console.log(axios.defaults.headers);
-
+        //need to refine BaseFunctions to handle this better.
         axios(
             {
                 method: "post",
-                url: 'http://localhost:8080/videos/videoupload',
+                url: urlPath('/videoupload'),
                 data: formData,
                 headers: {
                     "content-type": "multipart/form-data"
@@ -119,10 +130,10 @@ const VideoUploader = () => {
     return (
         <div>
             <h2>Video Uploader</h2>
-            <div><label>Video Title: </label><input className="video-input" autoComplete="off" type="text" id="video_title" /></div>
-            <div><label>Video Description: </label><textarea className="video-input" autoComplete="off" type="text" id="video_description"></textarea></div>
-            <div><label>Video Category: </label><input className="video-input" autoComplete="off" type="text" id="video_category" /></div>
-            <div><label>Video Author: </label><input className="video-input" autoComplete="off" type="text" id="video_author" /></div>
+            <div><label>Video Title: </label><input className="video-input" autoComplete="off" type="text" id="title" name="title" onChange={(event) => titleHandler(event)} /></div>
+            <div><label>Video Description: </label><textarea className="video-input" autoComplete="off" type="text" id="description" name="description"></textarea></div>
+            <div><label>Video Category: </label><input className="video-input" autoComplete="off" type="text" id="video_category" name="category" /></div>
+            <div><label>Video Author: </label><input className="video-input" autoComplete="off" type="text" id="creator" name="creator" /></div>
             <div><label>Video Tags: </label><textarea id="tags" name="tags" rows="4" cols="50" disabled value="Not currently in use"></textarea></div>
             <div className="media-flex-container">
                 <div className="image-uploader">

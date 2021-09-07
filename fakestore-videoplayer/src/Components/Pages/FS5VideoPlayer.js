@@ -2,7 +2,8 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import { useState, useEffect } from "react";
 import HTML5Video from "../Parts/HTML5Video";
-//import { Test } from '../../Functions/BaseFunctions'
+import { urlPath } from '../../Functions/BaseFunctions'
+
 
 const FS5VideoPlayer = () => {
   //Generate the playList
@@ -11,20 +12,6 @@ const FS5VideoPlayer = () => {
   const [items, SetItems] = useState([]);
   const [nowPlaying, SetNowPlaying] = useState("");
 
-
-  // Needs to work on variable declaration and not hardcoded
-  // This should come from the app.js through prop.
-  //for release I need to change this. 
-  const currenthost = window.location.host;
-  const currentport = window.location.port;
-  const currentprotocal = window.location.protocol;
-  const path = () => {
-    if (currentprotocal === "http:") {
-      return 'http://localhost:8080/videos'
-    } else {
-      return `${currentprotocal}//${currenthost}${currentport}/videos/`;
-    }
-  };
   const isNowPlaying = (nplaying) => {
     console.log("nplaying", nplaying.length);
     if (nplaying.length < 1) {
@@ -40,18 +27,18 @@ const FS5VideoPlayer = () => {
 
 
 
-  const urli = () => {
-    if (currentport === "3000") {
-      return 'http://localhost:8080/videos/videostub'
-    } else {
-      return (`${currentprotocal}//${currenthost}/videos/videostub`);
-    }
-  };
+  // const urli = () => {
+  //   if (currentport === "3000") {
+  //     return 'http://localhost:8080/videos/videostub'
+  //   } else {
+  //     return (`${currentprotocal}//${currenthost}/videos/videostub`);
+  //   }
+  // };
 
   //const url = 'http://localhost:8080/videos/videostub'
-  console.log(urli());
+  console.log(urlPath('videostub'))
   useEffect(() => {
-    fetch(urli())
+    fetch(urlPath('videostub'))
       .then(response => response.json())
       .then(json => {
         SetItems(json.videos);
@@ -100,7 +87,7 @@ const FS5VideoPlayer = () => {
                 <div key={videos.title} className="thumb-item">
 
                   <a href="#" onClick={() => playVideo(index)}>
-                    <img src={`${path()}/videoimage/${videos.src}_icon.png`} alt={videos.title} className="thumb-image" />
+                    <img src={`${urlPath('videoimage/')}${videos.src}_icon.png`} alt={videos.title} className="thumb-image" />
                   </a>
                 </div>
               )
