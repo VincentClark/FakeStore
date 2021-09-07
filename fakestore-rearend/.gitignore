@@ -10,6 +10,9 @@
 *.Identifier
 *.mp4
 *.png
+# removing build
+/fakestore-rearend/build
+/fakestore-rearend/build_video
 # testing
 /coverage
 
