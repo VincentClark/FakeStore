@@ -10,6 +10,7 @@
 *.Identifier
 *.mp4
 *.png
+/dev
 # removing build
 /fakestore-rearend/build
 /fakestore-rearend/build_video

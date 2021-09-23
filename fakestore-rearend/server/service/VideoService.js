@@ -128,6 +128,7 @@ class VideoService {
             console.log("ADMIN CLEANUP CHECKED!")
             const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
             const db = client.db('fsvideodatabase');
+            console.log(db);
             const filedest_base = path.join(__dirname, "../", "/media_library/videos/");
             const video_images = path.join(__dirname, "../", "/media_library/videos/videos_images");
             const video_available = path.join(__dirname, "../", "/media_library/videos/videos_available");
@@ -142,7 +143,7 @@ class VideoService {
                 correctAvailableDirectory.push(`${video_available}/${element}`)
             })
             const combineDirectories = [...correctImageDirectory, ...correctAvailableDirectory];
-            console.log("imagesDirectory", combineDirectories);
+            //console.log("imagesDirectory", combineDirectories);
             //delete all files in combineDirectories
             combineDirectories.forEach(element => {
                 fs.unlink(element, (err) => {
@@ -166,14 +167,14 @@ class VideoService {
     async deleteVideoFiles() {
         const video_images = this.directoryCheck('/videos_images')
             .then(() => {
-                console.log("video_images", video_images);
+                //console.log("video_images", video_images);
                 const videos_available = this.directoryCheck('/videos_available');
             })
             .then(() => {
                 const video_imagesAr = video_images
                 const videos_availableAr = videos_available
                 const deleteVideos = video_imagesAr.concat(videos_availableAr);
-                console.log("deleteVideos", deleteVideos);
+                // console.log("deleteVideos", deleteVideos);
                 return deleteVideos;
             })
             .catch(err => {
@@ -224,12 +225,12 @@ class VideoService {
     async returnWithVideo(qs) {
 
         const videoId = qs
-        console.log(videoId)
+        //console.log(videoId)
         // const pathP = new url.URLSearchParams("videosrc")
         // const pathP = req.query.videosrc;
         const fileName = this.filepath + "/videos_available/" + videoId + ".mp4"
         const { size } = await this.fileInfo(fileName);
-        console.log("SERVICE SIZE", size);
+        //console.log("SERVICE SIZE", size);
         //const range = req.headers.range;
         let videoObject = { "size": size, "fileName": fileName }
         return (videoObject)
@@ -237,14 +238,14 @@ class VideoService {
     //I shouldn't use .pn or figure out a way around this. 
     // pn will send through a weird problem, and try to download a file if the server is not responding correctly. 
     async returnWithImage(qs) {
-        console.log("imagepath", qs)
+        //console.log("imagepath", qs)
         const fileName = this.filepath + "videos_images/" + qs
         try {
             const { size } = await this.fileInfo(fileName);
-            console.log("SERVICE SIZE", size);
+            //    console.log("SERVICE SIZE", size);
             return fileName;
         } catch (err) {
-            console.log("ERROR")
+            // console.log("ERROR")
             return (this.filepath + "videos_images/scrubjay_icon.png")
         }
 
@@ -333,10 +334,10 @@ class VideoService {
                 });
                 return file_name_base;
             };
-            console.log("YOU ARE HERE")
+            // console.log("YOU ARE HERE")
             //should be moved above the try block
             const imageDesignator = (imgObj = false, imgBase, imgFun, imageSize = []) => {
-                console.log("NEXT");
+                //  console.log("NEXT");
                 if (imgObj) {
                     console.log("IMG OBJ", imgObj);
                     const imageObject = imgObj;
@@ -359,23 +360,6 @@ class VideoService {
                             }
                         });
 
-
-                    //inserting file resize here
-
-                    //console.log("imageResize", imageResize);
-                    //end of file resize
-                    //change this to delete if this works.
-                    // fs.rename(imageFile, imagePath, (err) => {
-                    //     if (err) {
-                    //         console.log("ERROR ERROR", err)
-                    //         //   return (`default_${imgFun}.png`)
-                    //         imageName = `default_${imgFun}.png`
-
-                    //     } else {
-                    //         console.log("imageName", imageName)
-                    //         //   return (imageName)
-                    //     }
-                    // })
                     return imageName;
                 } else {
                     return (`default_${imgFun}.png`)
@@ -396,34 +380,11 @@ class VideoService {
 
             const pofile = checkForImage(req.files.poster);
             const icfile = checkForImage(req.files.icon);
-
-            // const pofile = (req.files.icon[0]) ? req.files.poster[0] : false;
-            // const icfile = (req.files.icon[0]) ? req.files.icon[0] : false;
             const videoFile = createVideoFile(req.files.video[0]);
             const posterFile = imageDesignator(pofile[0], videoFile, 'poster', [720, 480]);
             const iconFile = imageDesignator(icfile[0], videoFile, 'icon', [127, 127]);
             const fullPosterFile = `${filedest_images}${posterFile}`
             console.log("fullPosterFile", fullPosterFile);
-
-            // const resizeFile = (fullImageFile, imageFile) => {
-
-            //     const imageResize = sharp(fullImageFile)
-            //         .resize(720, 480)
-            //         .toFile(`${filedest_base}/videos_images/rs${imageFile}`, (err, info) => {
-            //             if (err) {
-            //                 console.log("ERROR RESIZING", err);
-            //                 return false;
-            //             } else {
-            //                 console.log("image resize successful {0}");
-            //                 return true;
-            //             }
-            //         });
-            // }
-            // if (pofile) {
-            //     // const resizePosterFile = resizeFile(fullPosterFile, posterFile);
-
-            // }
-
             const reqbody = (bodyItem = "default", defaultDescription) => {
                 if (bodyItem === "default") {
                     return defaultDescription;
@@ -521,8 +482,6 @@ class VideoService {
         } catch (err) {
             console.log("ERROR || ERRORService no response", err)
             return (`ERROR ${err}`)
-
-            //res.status(500).json({ message: "oops BAD poop something went wrong on route /simpupload", status: "false", err });
         }
     }
 

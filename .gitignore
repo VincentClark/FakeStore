@@ -4,3 +4,4 @@
 *.vscode
 /.vscode/launch.json
 /fakestore-rearend/uploads
+/dev
