@@ -1,0 +1,70 @@
+{
+    "id": "Test RS",
+    "path": "Test RS",
+    "plants":[
+        {
+            "id":"name+type",
+            "name":"Arkansa",
+            "type":"Tomato",
+            "plant tape": "10/20/2021",
+            "location" : "main garden",
+            "container" : "raised garden",
+            "water schedual": [
+                {
+                    "date" : "11/11/20",
+                    "weather" : "sunny",
+                    "water amount" : "1/2 gallon",
+                    "tempature" : "72"
+                }
+            ],
+            "spray" : [
+                {
+                    "date" : "11/11/20",
+                    "health" : " NOTES " ,
+                    "weather" : "sunny",
+                    "water amount" : "1/2 gallon",
+                    "tempature" : "72",
+                    "infestation" : "spidermites,",
+                    "compount" : "Neem mix"
+                }
+            ],
+            "fertalizer":[
+                {
+                    "date" : "11/11/22",
+                    "weather" : "sunny",
+                    "next fertalize date" : "01/11/2022",
+                    "tempature" : "75",
+                    "fertalizer type" : "D-40",
+                    "forecast" : [
+                        {
+                            "date" : "11/11/20",
+                            "weather" : "sunny",
+                            "tempature" : "72"
+                            
+                        },
+                        {
+                            "date" : "11/12/20",
+                            "weather" : "sunny",
+                            "tempature" : "72"
+                        }
+                    ]
+                }
+            ],
+            "fruit":[
+                {
+                    "date" : "11/11/21",
+                    "total fruit" : 4,
+                    "total flower" : 6,
+                    "unrippen" : 4,
+                    "midripen" : 2,
+                    "ripe" : 2                  
+                }
+            ],
+            "harvested" : 20
+        
+        }
+
+    ]
+
+}
+

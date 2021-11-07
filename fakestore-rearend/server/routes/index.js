@@ -6,13 +6,13 @@ const path = require('path');
 const cors = require('cors');
 //Required indexes
 const videosRoute = require('./videos');
-const buildRoute = require('./build')
+const gardenRoute = require('./gardentracker');
 
 
 
 module.exports = (params) => {
     const { videos } = params;
-    const { build } = params;
+    const { gardentracker } = params;
     const buildpath = path.join(__dirname, "..", "..", "/server/build/index.html");
     console.log("BUILD PATH", buildpath)
     //console.log(videos);
@@ -31,6 +31,7 @@ module.exports = (params) => {
     })
 
     router.use('/videos', videosRoute(params));
+    router.use('/gardentracker', gardenRoute(params));
 
 
     return router
