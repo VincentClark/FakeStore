@@ -3,9 +3,7 @@ import React, { Component, Redirect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavBar from "./global_components/NavBar";
 import HomePage from "./components/pages/HomePage";
-import RegisterForm from "./components/pages/RegisterForm";
-import PainTracking from "./components/pages/PaintTacking";
-// import VideoShorts from "./components/pages/VideoShorts";
+import Twilio from "./components/pages/Twilio";
 import NotFoundPage from "./components/pages/NotFoundPage";
 
 function App() {
@@ -18,21 +16,11 @@ function App() {
     },
     {
       id: 2,
-      title: "Registration",
-      ref: "/register",
-      component: RegisterForm,
+      title: "Twilio",
+      ref: "/twilio",
+      component: Twilio,
     },
-    {
-      id: 3,
-      title: "Garden Tracker",
-      ref: "/painTracking",
-      component: PainTracking,
-    },
-    {
-      id: 4,
-      title: "Video Shorts",
-      ref: "/videoplayer",
-    },
+
   ];
 
   return (

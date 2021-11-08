@@ -12,7 +12,6 @@ const mongoose = require('mongoose');
 const middlewares = require('../middlewares');
 const stubModel = require('../../models/stubModel');
 cors = require('cors');
-
 const dbase = mongoose.connection;
 
 

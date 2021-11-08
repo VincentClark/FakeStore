@@ -7,12 +7,14 @@ const cors = require('cors');
 //Required indexes
 const videosRoute = require('./videos');
 const gardenRoute = require('./gardentracker');
+const twilioRoute = require('./twilio');
 
 
 
 module.exports = (params) => {
     const { videos } = params;
     const { gardentracker } = params;
+    const { twilio } = params;
     const buildpath = path.join(__dirname, "..", "..", "/server/build/index.html");
     console.log("BUILD PATH", buildpath)
     //console.log(videos);
@@ -32,6 +34,7 @@ module.exports = (params) => {
 
     router.use('/videos', videosRoute(params));
     router.use('/gardentracker', gardenRoute(params));
+    router.use('/twilio', twilioRoute(params));
 
 
     return router
